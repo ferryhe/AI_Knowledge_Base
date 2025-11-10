@@ -1,0 +1,72 @@
+import os
+import pickle
+import sys
+from pathlib import Path
+
+import faiss
+import numpy as np
+from dotenv import load_dotenv
+from openai import OpenAI
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = PROJECT_ROOT.parent
+
+load_dotenv(dotenv_path=PROJECT_ROOT / ".env")
+
+MODEL = os.getenv("MODEL", "gpt-4o")
+EMB_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-large")
+INDEX_PATH = Path(os.getenv("INDEX_PATH", PROJECT_ROOT / "knowledge_base.faiss")).resolve()
+META_PATH = Path(os.getenv("META_PATH", PROJECT_ROOT / "knowledge_base.meta.pkl")).resolve()
+
+SYSTEM_PROMPT = (
+    "You are the documentation expert for the IAA AI Knowledge Base. "
+    "Answer strictly from the retrieved snippets and cite the file path for every key statement. "
+    "If you cannot find supporting evidence, clearly reply 'Not sure' and suggest which Markdown file to review."
+)
+
+
+def _load_index(path: Path):
+    try:
+        return faiss.read_index(str(path))
+    except TypeError:
+        with open(path, "rb") as fh:
+            buf = fh.read()
+        arr = np.frombuffer(buf, dtype="uint8")
+        return faiss.deserialize_index(arr)
+
+
+def retrieve(client: OpenAI, question: str, k: int = 8):
+    if not INDEX_PATH.exists() or not META_PATH.exists():
+        raise FileNotFoundError(
+            "Missing vector store files. Run scripts/build_index.py first.\n"
+            f"Expected:\n  {INDEX_PATH}\n  {META_PATH}"
+        )
+
+    index = _load_index(INDEX_PATH)
+    docs = pickle.load(open(META_PATH, "rb"))
+
+    query_vec = client.embeddings.create(model=EMB_MODEL, input=[question]).data[0].embedding
+    distances, indices = index.search(np.array([query_vec], dtype="float32"), k)
+    return [docs[i] for i in indices[0]]
+
+
+def main():
+    if len(sys.argv) < 2:
+        print("Usage: python scripts/ask.py \"your question\"")
+        sys.exit(1)
+
+    question = sys.argv[1]
+    client = OpenAI()
+    hits = retrieve(client, question)
+
+    context = "\n\n".join(f"[{i+1}] {hit['path']}\n{hit['text']}" for i, hit in enumerate(hits))
+    messages = [
+        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "user", "content": f"Retrieved snippets:\n{context}\n\nQuestion: {question}"},
+    ]
+    response = client.chat.completions.create(model=MODEL, messages=messages, temperature=0.2)
+    print(response.choices[0].message.content)
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,6 @@
+# AI agent runtime artifacts
+AI_Agent/.env
+AI_Agent/.venv/
+AI_Agent/*.faiss
+AI_Agent/*.meta.pkl
+AI_Agent/*.pkl

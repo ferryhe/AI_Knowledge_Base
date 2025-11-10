@@ -1,0 +1,121 @@
+import argparse
+import os
+import pickle
+from pathlib import Path
+from typing import Iterable, List
+
+import faiss
+import numpy as np
+import tiktoken
+from dotenv import load_dotenv
+from openai import OpenAI
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = PROJECT_ROOT.parent.resolve()
+
+load_dotenv(dotenv_path=PROJECT_ROOT / ".env")
+
+DEFAULT_SOURCE = Path(os.getenv("SOURCE_DIR", REPO_ROOT / "Knowledge_Base_MarkDown"))
+DEFAULT_INDEX = Path(os.getenv("INDEX_PATH", PROJECT_ROOT / "knowledge_base.faiss"))
+DEFAULT_META = Path(os.getenv("META_PATH", PROJECT_ROOT / "knowledge_base.meta.pkl"))
+EMBED_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-large")
+
+enc = tiktoken.get_encoding("cl100k_base")
+
+
+def iter_markdown_files(source: Path) -> Iterable[Path]:
+    if not source.exists():
+        raise FileNotFoundError(f"Source directory not found: {source}")
+    for path in sorted(source.rglob("*.md")):
+        if path.is_file():
+            yield path.resolve()
+
+
+def chunk_text(text: str, max_tokens: int = 500, overlap: int = 80) -> Iterable[str]:
+    tokens = enc.encode(text)
+    if not tokens:
+        return []
+    step = max(1, max_tokens - overlap)
+    for i in range(0, len(tokens), step):
+        yield enc.decode(tokens[i : i + max_tokens])
+
+
+def embed_batches(client: OpenAI, chunks: List[str]) -> List[List[float]]:
+    resp = client.embeddings.create(model=EMBED_MODEL, input=chunks)
+    return [item.embedding for item in resp.data]
+
+
+def build_index(
+    source: Path,
+    index_path: Path,
+    meta_path: Path,
+    max_tokens: int = 500,
+    overlap: int = 80,
+    batch_size: int = 64,
+):
+    if not os.getenv("OPENAI_API_KEY"):
+        raise RuntimeError("OPENAI_API_KEY not set. Add it to AI_Agent/.env or export it before running.")
+
+    client = OpenAI()
+
+    documents = []
+    vectors: List[List[float]] = []
+    buffer: List[str] = []
+
+    for md_path in iter_markdown_files(source):
+        try:
+            text = md_path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            text = md_path.read_text(encoding="latin-1", errors="ignore")
+
+        for chunk in chunk_text(text, max_tokens=max_tokens, overlap=overlap):
+            rel_path = md_path.relative_to(REPO_ROOT)
+            documents.append({"path": str(rel_path), "text": chunk})
+            buffer.append(chunk)
+
+            if len(buffer) == batch_size:
+                vectors.extend(embed_batches(client, buffer))
+                buffer = []
+
+    if buffer:
+        vectors.extend(embed_batches(client, buffer))
+
+    if not vectors:
+        raise RuntimeError("No text chunks were embedded. Check the source folder for Markdown files.")
+
+    dim = len(vectors[0])
+    index = faiss.IndexFlatIP(dim)
+    index.add(np.array(vectors, dtype="float32"))
+    index_path = index_path.resolve()
+    faiss.write_index(index, str(index_path))
+
+    meta_path = meta_path.resolve()
+    meta_path.write_bytes(pickle.dumps(documents))
+    print(f"[ok] Saved index to {index_path} and metadata to {meta_path} (chunks={len(documents)})")
+
+
+def parse_args():
+    ap = argparse.ArgumentParser(description="Build a FAISS index over local IAA Knowledge Base Markdown files.")
+    ap.add_argument("--source", type=Path, default=DEFAULT_SOURCE, help="Directory with Markdown files")
+    ap.add_argument("--index-path", type=Path, default=DEFAULT_INDEX, help="Output path for FAISS index")
+    ap.add_argument("--meta-path", type=Path, default=DEFAULT_META, help="Output path for metadata pickle")
+    ap.add_argument("--max-tokens", type=int, default=500, help="Chunk size in tokens")
+    ap.add_argument("--overlap", type=int, default=80, help="Token overlap between consecutive chunks")
+    ap.add_argument("--batch-size", type=int, default=64, help="Embedding batch size")
+    return ap.parse_args()
+
+
+def main():
+    args = parse_args()
+    build_index(
+        source=args.source,
+        index_path=args.index_path,
+        meta_path=args.meta_path,
+        max_tokens=args.max_tokens,
+        overlap=args.overlap,
+        batch_size=args.batch_size,
+    )
+
+
+if __name__ == "__main__":
+    main()
