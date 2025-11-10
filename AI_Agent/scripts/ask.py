@@ -22,9 +22,21 @@ _DOCS_CACHE = None
 
 SYSTEM_PROMPT = (
     "You are the documentation expert for the IAA AI Knowledge Base. "
-    "Answer strictly from the retrieved snippets and cite the file path for every key statement. "
-    "If you cannot find supporting evidence, clearly reply 'Not sure' and suggest which Markdown file to review."
+    "Every response must stay within the retrieved snippets and cite evidence using the snippet number plus file path "
+    "in the format `[n] path/to/file.md`. Structure answers with a short summary followed by bullet points of "
+    "supporting evidence. If the snippets do not contain the answer, reply 'Not sure' and recommend the most relevant "
+    "Markdown file to inspect."
 )
+
+
+def format_user_prompt(question: str, context: str) -> str:
+    return (
+        "You will receive Markdown excerpts from the IAA AI Knowledge Base. Each excerpt already includes a numeric tag "
+        "like [1], [2], etc., plus its file path. Use only these excerpts to answer the question. "
+        "When citing information, reuse the same numeric tag and file path so the reader can trace the source. "
+        "If there is no supporting excerpt, say 'Not sure' and mention which Markdown file should be reviewed.\n\n"
+        f"Retrieved snippets:\n{context}\n\nQuestion: {question}"
+    )
 
 
 def _load_index(path: Path):
@@ -82,7 +94,7 @@ def main():
     context = "\n\n".join(f"[{i+1}] {hit['path']}\n{hit['text']}" for i, hit in enumerate(hits))
     messages = [
         {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": f"Retrieved snippets:\n{context}\n\nQuestion: {question}"},
+        {"role": "user", "content": format_user_prompt(question, context)},
     ]
     response = client.chat.completions.create(model=MODEL, messages=messages, temperature=0.2)
     print(response.choices[0].message.content)

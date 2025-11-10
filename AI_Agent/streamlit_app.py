@@ -4,7 +4,7 @@ from pathlib import Path
 import streamlit as st
 from openai import OpenAI
 
-from scripts.ask import INDEX_PATH, META_PATH, MODEL, SYSTEM_PROMPT, retrieve
+from scripts.ask import INDEX_PATH, META_PATH, MODEL, SYSTEM_PROMPT, format_user_prompt, retrieve
 
 REPO_URL = "https://github.com/ferryhe/IAA_AI_Knowledge_Base"
 DOCS_DIR = Path(__file__).resolve().parent.parent / "Knowledge_Base_MarkDown"
@@ -24,6 +24,18 @@ if not has_api_key:
 if not artifacts_ready:
     st.warning("Vector index not found. Run `make index` (or `python scripts/build_index.py`) first.")
 
+if "history" not in st.session_state:
+    st.session_state.history = []
+if "show_help" not in st.session_state:
+    st.session_state.show_help = False
+if "pending_summary_prompt" not in st.session_state:
+    st.session_state.pending_summary_prompt = None
+chat_disabled = not (has_api_key and artifacts_ready)
+user_query = st.chat_input(
+    "Type a question about the Markdown documents...",
+    disabled=chat_disabled,
+    key="chat_prompt",
+)
 
 def load_markdown_catalog():
     if not DOCS_DIR.exists():
@@ -32,7 +44,10 @@ def load_markdown_catalog():
 
 
 def read_preview_text(path: Path) -> str:
-    text = path.read_text(encoding="utf-8")
+    try:
+        text = path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        text = path.read_text(encoding="utf-8", errors="ignore")
     if len(text) <= PREVIEW_CHAR_LIMIT:
         return text
     return f"{text[:PREVIEW_CHAR_LIMIT]}\n...\n(Preview truncated to {PREVIEW_CHAR_LIMIT:,} characters.)"
@@ -40,11 +55,23 @@ def read_preview_text(path: Path) -> str:
 
 md_files = load_markdown_catalog()
 relative_paths = [str(path.relative_to(DOCS_DIR)) for path in md_files]
+selected_file = None
+selected_label = None
 
 with st.sidebar:
-    st.header("Markdown Library")
+    st.header("Knowledge Library")
     st.caption(f"Source: [{REPO_URL}]({REPO_URL})")
-    st.text(f"{len(md_files)} files indexed")
+    st.metric("Markdown files", len(md_files))
+
+    if st.button("How to use this agent"):
+        st.session_state.show_help = not st.session_state.show_help
+    if st.session_state.show_help:
+        st.markdown(
+            "- Browse the Markdown files to understand available context.\n"
+            "- Ask focused questions using the main panel form.\n"
+            "- Review answers with citations and inspect retrieved snippets."
+        )
+
     filter_term = st.text_input("Filter files", placeholder="Type keywords", label_visibility="collapsed")
 
     filtered_options = relative_paths
@@ -64,68 +91,61 @@ with st.sidebar:
         st.markdown(f"[Open in GitHub]({github_blob})")
         with st.expander("Preview", expanded=False):
             st.code(read_preview_text(selected_file), language="markdown")
+        if st.button("Summarize this file", use_container_width=True, key="summarize_button"):
+            if not has_api_key or not artifacts_ready:
+                st.error("Set up the API key and index before requesting summaries.")
+            else:
+                summary_prompt = (
+                    f"Summarize the key objectives, findings, and recommended actions from `{selected_label}`. "
+                    "Use only content from that document."
+                )
+                st.session_state.pending_summary_prompt = summary_prompt
 
-st.subheader("How to use this agent")
-st.markdown(
-    """
-1. Browse the Markdown files in the sidebar to understand available context.
-2. Ask focused questions about the repository content using the form below.
-3. Review answers with citations and inspect retrieved snippets for verification.
-"""
-)
-st.divider()
-
-st.subheader("Ask the Knowledge Base")
-st.caption(
-    f"All responses are grounded in `Knowledge_Base_MarkDown/` from [{REPO_URL}]({REPO_URL})."
-)
-
-with st.form("ask_form", clear_on_submit=True):
-    question = st.text_area(
-        "Question",
-        placeholder="e.g., Summarize the July 2025 AI governance consultation draft",
-    )
-    ask_button = st.form_submit_button(
-        "Ask", use_container_width=True, disabled=not (has_api_key and artifacts_ready)
-    )
-
-if "history" not in st.session_state:
-    st.session_state.history = []
-
-if ask_button:
-    if not question.strip():
-        st.warning("Please enter a question before submitting.")
+trigger_question = None
+pending_summary = st.session_state.pending_summary_prompt
+if pending_summary:
+    trigger_question = pending_summary
+    st.session_state.pending_summary_prompt = None
+elif user_query is not None:
+    if chat_disabled:
+        st.error("Set up the API key and index before issuing queries.")
     else:
-        try:
-            with st.spinner("Retrieving and generating answer..."):
-                client = OpenAI()
-                hits = retrieve(client, question)
-                context = "\n\n".join(f"[{i+1}] {hit['path']}\n{hit['text']}" for i, hit in enumerate(hits))
-                messages = [
-                    {"role": "system", "content": SYSTEM_PROMPT},
-                    {
-                        "role": "user",
-                        "content": f"Retrieved snippets:\n{context}\n\nQuestion: {question}",
-                    },
-                ]
-                response = client.chat.completions.create(model=MODEL, messages=messages, temperature=0.2)
-                answer = response.choices[0].message.content
-                st.session_state.history.insert(0, {"question": question, "answer": answer, "hits": hits})
-        except FileNotFoundError as err:
-            st.error(f"{err}")
-        except Exception as err:  # noqa: BLE001 - surface user-friendly error
-            st.error(f"Unable to generate an answer: {err}")
+        cleaned = user_query.strip()
+        if cleaned:
+            trigger_question = cleaned
+        else:
+            st.warning("Please enter a question before submitting.")
+
+if trigger_question:
+    try:
+        with st.spinner("Retrieving and generating answer..."):
+            client = OpenAI()
+            hits = retrieve(client, trigger_question)
+            context = "\n\n".join(f"[{i+1}] {hit['path']}\n{hit['text']}" for i, hit in enumerate(hits))
+            messages = [
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": format_user_prompt(trigger_question, context)},
+            ]
+            response = client.chat.completions.create(model=MODEL, messages=messages, temperature=0.2)
+            answer = response.choices[0].message.content
+            st.session_state.history.append({"question": trigger_question, "answer": answer, "hits": hits})
+    except FileNotFoundError as err:
+        st.error(f"{err}")
+    except Exception as err:  # noqa: BLE001 - surface user-friendly error
+        st.error(f"Unable to generate an answer: {err}")
 
 st.divider()
 st.subheader("Conversation history")
+st.caption(f"Responses cite Markdown sources from [{REPO_URL}]({REPO_URL}).")
 
 if not st.session_state.history:
     st.info("No questions yet. Submit one to start building the conversation timeline.")
 else:
     for entry in st.session_state.history:
-        st.markdown(f"### Q: {entry['question']}")
-        st.markdown(entry["answer"])
+        st.markdown(f"**You:** {entry['question']}")
+        st.markdown(f"**AI:** {entry['answer']}")
         with st.expander("Retrieved snippets"):
             for i, hit in enumerate(entry["hits"], start=1):
-                st.markdown(f"**[{i}] {hit['path']}**")
+                repo_link = f"{REPO_URL}/blob/main/{hit['path'].replace(os.sep, '/')}"
+                st.markdown(f"**[{i}]** [{hit['path']} ↗]({repo_link})")
                 st.code(hit["text"], language="markdown")
