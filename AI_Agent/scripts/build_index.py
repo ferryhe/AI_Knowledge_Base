@@ -83,9 +83,12 @@ def build_index(
     if not vectors:
         raise RuntimeError("No text chunks were embedded. Check the source folder for Markdown files.")
 
-    dim = len(vectors[0])
+    embeddings = np.array(vectors, dtype="float32")
+    faiss.normalize_L2(embeddings)
+
+    dim = embeddings.shape[1]
     index = faiss.IndexFlatIP(dim)
-    index.add(np.array(vectors, dtype="float32"))
+    index.add(embeddings)
     index_path = index_path.resolve()
     faiss.write_index(index, str(index_path))
 

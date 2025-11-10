@@ -4,3 +4,5 @@ AI_Agent/.venv/
 AI_Agent/*.faiss
 AI_Agent/*.meta.pkl
 AI_Agent/*.pkl
+__pycache__/
+*.pyc

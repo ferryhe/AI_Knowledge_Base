@@ -18,6 +18,8 @@ MODEL = os.getenv("MODEL", "gpt-4o")
 EMB_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-large")
 INDEX_PATH = os.getenv("INDEX_PATH", "/data/knowledge_base.faiss")
 META_PATH = os.getenv("META_PATH", "/data/knowledge_base.meta.pkl")
+_INDEX_CACHE = None
+_DOCS_CACHE = None
 
 SYSTEM_PROMPT = (
     "You are the documentation expert for the IAA AI Knowledge Base. "
@@ -33,20 +35,38 @@ def _latest_user_question(messages):
     return ""
 
 
-def _retrieve(client: OpenAI, question: str, k: int = 8):
-    if not (os.path.exists(INDEX_PATH) and os.path.exists(META_PATH)):
-        raise FileNotFoundError(
-            "Missing index or metadata files. "
-            f"Expected:\n  {INDEX_PATH}\n  {META_PATH}\n"
-            "Run scripts/build_index.py and mount the results into the container."
-        )
+def _load_artifacts(refresh: bool = False):
+    global _INDEX_CACHE, _DOCS_CACHE
 
-    index = faiss.read_index(INDEX_PATH)
-    docs = pickle.load(open(META_PATH, "rb"))
+    if refresh or _INDEX_CACHE is None or _DOCS_CACHE is None:
+        if not (os.path.exists(INDEX_PATH) and os.path.exists(META_PATH)):
+            raise FileNotFoundError(
+                "Missing index or metadata files. "
+                f"Expected:\n  {INDEX_PATH}\n  {META_PATH}\n"
+                "Run scripts/build_index.py and mount the results into the container."
+            )
+
+        _INDEX_CACHE = faiss.read_index(INDEX_PATH)
+        with open(META_PATH, "rb") as fh:
+            _DOCS_CACHE = pickle.load(fh)
+
+    return _INDEX_CACHE, _DOCS_CACHE
+
+
+def refresh_cache():
+    """Allow external callers to refresh the FAISS/metadata cache."""
+    _load_artifacts(refresh=True)
+
+
+def _retrieve(client: OpenAI, question: str, k: int = 8):
+    index, docs = _load_artifacts()
 
     query_vec = client.embeddings.create(model=EMB_MODEL, input=[question]).data[0].embedding
-    distances, indices = index.search(np.array([query_vec], dtype="float32"), k)
-    return [docs[i] for i in indices[0]]
+    query_array = np.array([query_vec], dtype="float32")
+    faiss.normalize_L2(query_array)
+
+    distances, indices = index.search(query_array, k)
+    return [docs[i] for i in indices[0] if 0 <= i < len(docs)]
 
 
 def pipeline(messages: list[dict]):

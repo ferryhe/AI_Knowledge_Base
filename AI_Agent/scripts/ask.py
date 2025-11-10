@@ -17,6 +17,8 @@ MODEL = os.getenv("MODEL", "gpt-4o")
 EMB_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-large")
 INDEX_PATH = Path(os.getenv("INDEX_PATH", PROJECT_ROOT / "knowledge_base.faiss")).resolve()
 META_PATH = Path(os.getenv("META_PATH", PROJECT_ROOT / "knowledge_base.meta.pkl")).resolve()
+_INDEX_CACHE = None
+_DOCS_CACHE = None
 
 SYSTEM_PROMPT = (
     "You are the documentation expert for the IAA AI Knowledge Base. "
@@ -35,19 +37,37 @@ def _load_index(path: Path):
         return faiss.deserialize_index(arr)
 
 
-def retrieve(client: OpenAI, question: str, k: int = 8):
-    if not INDEX_PATH.exists() or not META_PATH.exists():
-        raise FileNotFoundError(
-            "Missing vector store files. Run scripts/build_index.py first.\n"
-            f"Expected:\n  {INDEX_PATH}\n  {META_PATH}"
-        )
+def _load_artifacts(refresh: bool = False):
+    global _INDEX_CACHE, _DOCS_CACHE
 
-    index = _load_index(INDEX_PATH)
-    docs = pickle.load(open(META_PATH, "rb"))
+    if refresh or _INDEX_CACHE is None or _DOCS_CACHE is None:
+        if not INDEX_PATH.exists() or not META_PATH.exists():
+            raise FileNotFoundError(
+                "Missing vector store files. Run scripts/build_index.py first.\n"
+                f"Expected:\n  {INDEX_PATH}\n  {META_PATH}"
+            )
+
+        _INDEX_CACHE = _load_index(INDEX_PATH)
+        with META_PATH.open("rb") as fh:
+            _DOCS_CACHE = pickle.load(fh)
+
+    return _INDEX_CACHE, _DOCS_CACHE
+
+
+def refresh_cache():
+    """Reload FAISS and metadata, useful after re-building the index."""
+    _load_artifacts(refresh=True)
+
+
+def retrieve(client: OpenAI, question: str, k: int = 8):
+    index, docs = _load_artifacts()
 
     query_vec = client.embeddings.create(model=EMB_MODEL, input=[question]).data[0].embedding
-    distances, indices = index.search(np.array([query_vec], dtype="float32"), k)
-    return [docs[i] for i in indices[0]]
+    query_array = np.array([query_vec], dtype="float32")
+    faiss.normalize_L2(query_array)
+
+    distances, indices = index.search(query_array, k)
+    return [docs[i] for i in indices[0] if 0 <= i < len(docs)]
 
 
 def main():
