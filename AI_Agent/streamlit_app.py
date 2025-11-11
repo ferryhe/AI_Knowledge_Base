@@ -4,7 +4,15 @@ from pathlib import Path
 import streamlit as st
 from openai import OpenAI
 
-from scripts.ask import INDEX_PATH, META_PATH, MODEL, SYSTEM_PROMPT, format_user_prompt, retrieve
+from scripts.ask import (
+    INDEX_PATH,
+    META_PATH,
+    MODEL,
+    SYSTEM_PROMPT,
+    format_user_prompt,
+    get_document_snippets,
+    retrieve,
+)
 
 REPO_URL = "https://github.com/ferryhe/IAA_AI_Knowledge_Base"
 DOCS_DIR = Path(__file__).resolve().parent.parent / "Knowledge_Base_MarkDown"
@@ -99,12 +107,18 @@ with st.sidebar:
                     f"Summarize the key objectives, findings, and recommended actions from `{selected_label}`. "
                     "Use only content from that document."
                 )
-                st.session_state.pending_summary_prompt = summary_prompt
+                doc_path = f"Knowledge_Base_MarkDown/{selected_label.replace(os.sep, '/')}"
+                st.session_state.pending_summary_prompt = {
+                    "question": summary_prompt,
+                    "doc_path": doc_path,
+                }
 
 trigger_question = None
+target_doc_path = None
 pending_summary = st.session_state.pending_summary_prompt
 if pending_summary:
-    trigger_question = pending_summary
+    trigger_question = pending_summary.get("question")
+    target_doc_path = pending_summary.get("doc_path")
     st.session_state.pending_summary_prompt = None
 elif user_query is not None:
     if chat_disabled:
@@ -116,15 +130,38 @@ elif user_query is not None:
         else:
             st.warning("Please enter a question before submitting.")
 
+def _format_history_for_prompt(max_turns: int = 3, max_answer_chars: int = 300) -> str | None:
+    if not st.session_state.history:
+        return None
+    recent = st.session_state.history[-max_turns:]
+    formatted = []
+    for turn in recent:
+        answer = turn["answer"]
+        if len(answer) > max_answer_chars:
+            answer = answer[:max_answer_chars].rstrip() + "..."
+        formatted.append(f"Q: {turn['question']}\nA: {answer}")
+    return "\n\n".join(formatted)
+
+
 if trigger_question:
     try:
         with st.spinner("Retrieving and generating answer..."):
             client = OpenAI()
-            hits = retrieve(client, trigger_question)
+            if target_doc_path:
+                hits = get_document_snippets(target_doc_path)
+                if not hits:
+                    raise FileNotFoundError(
+                        f"Document `{target_doc_path}` is not present in the current index. "
+                        "Rebuild the index to include it."
+                    )
+                convo_history = None
+            else:
+                hits = retrieve(client, trigger_question)
+                convo_history = _format_history_for_prompt()
             context = "\n\n".join(f"[{i+1}] {hit['path']}\n{hit['text']}" for i, hit in enumerate(hits))
             messages = [
                 {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": format_user_prompt(trigger_question, context)},
+                {"role": "user", "content": format_user_prompt(trigger_question, context, convo_history)},
             ]
             response = client.chat.completions.create(model=MODEL, messages=messages, temperature=0.2)
             answer = response.choices[0].message.content

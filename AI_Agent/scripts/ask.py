@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import os
 import pickle
 import sys
@@ -15,10 +17,24 @@ load_dotenv(dotenv_path=PROJECT_ROOT / ".env")
 
 MODEL = os.getenv("MODEL", "gpt-4o")
 EMB_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-large")
-INDEX_PATH = Path(os.getenv("INDEX_PATH", PROJECT_ROOT / "knowledge_base.faiss")).resolve()
-META_PATH = Path(os.getenv("META_PATH", PROJECT_ROOT / "knowledge_base.meta.pkl")).resolve()
+
+
+def _resolve_path(value: str | None, default: Path) -> Path:
+    if not value:
+        return default.resolve()
+    candidate = Path(value)
+    if candidate.is_absolute():
+        return candidate.resolve()
+    return (PROJECT_ROOT / candidate).resolve()
+
+
+INDEX_PATH = _resolve_path(os.getenv("INDEX_PATH"), PROJECT_ROOT / "knowledge_base.faiss")
+META_PATH = _resolve_path(os.getenv("META_PATH"), PROJECT_ROOT / "knowledge_base.meta.pkl")
 _INDEX_CACHE = None
 _DOCS_CACHE = None
+
+def _normalize_path(path: str) -> str:
+    return path.replace("\\", "/").lower()
 
 SYSTEM_PROMPT = (
     "You are the documentation expert for the IAA AI Knowledge Base. "
@@ -29,9 +45,13 @@ SYSTEM_PROMPT = (
 )
 
 
-def format_user_prompt(question: str, context: str) -> str:
+def format_user_prompt(question: str, context: str, history: str | None = None) -> str:
+    history_block = ""
+    if history:
+        history_block = f"Prior conversation:\n{history}\n\n"
     return (
-        "You will receive Markdown excerpts from the IAA AI Knowledge Base. Each excerpt already includes a numeric tag "
+        history_block
+        + "You will receive Markdown excerpts from the IAA AI Knowledge Base. Each excerpt already includes a numeric tag "
         "like [1], [2], etc., plus its file path. Use only these excerpts to answer the question. "
         "When citing information, reuse the same numeric tag and file path so the reader can trace the source. "
         "If there is no supporting excerpt, say 'Not sure' and mention which Markdown file should be reviewed.\n\n"
@@ -69,6 +89,16 @@ def _load_artifacts(refresh: bool = False):
 def refresh_cache():
     """Reload FAISS and metadata, useful after re-building the index."""
     _load_artifacts(refresh=True)
+
+
+def get_document_snippets(doc_path: str, limit: int | None = None):
+    """Return FAISS metadata chunks for a specific Markdown path."""
+    _, docs = _load_artifacts()
+    target = _normalize_path(doc_path)
+    matches = [doc for doc in docs if _normalize_path(doc["path"]).endswith(target)]
+    if limit is not None:
+        return matches[:limit]
+    return matches
 
 
 def retrieve(client: OpenAI, question: str, k: int = 8):
