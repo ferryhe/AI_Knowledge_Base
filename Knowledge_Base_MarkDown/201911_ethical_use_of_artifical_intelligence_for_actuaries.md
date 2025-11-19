@@ -26,52 +26,52 @@ The opinions expressed and conclusions reached by the authors are their own and 
 ## Page 3
 # CONTENTS 
 
-1 Executive Summary ..... 5
-2 AI, the Social Context and the Five Pillars of Ethical AI ..... 7
-2.1 Defining AI ..... 7
-2.2 The Social Context ..... 8
-2.3 The Five Pillars of Ethical AI. ..... 10
-2.3.1 Responsibility. ..... 10
-2.3.2 Transparency ..... 11
-2.3.3 Predictability ..... 11
-2.3.4 Auditability. ..... 11
-2.3.5 Incorruptibility ..... 11
-2.4 Macro AI Ethics Obligations ..... 11
-3 Digital Transformation Drives AI Adoption ..... 12
-3.1 The Motivation for Digital Transformation. ..... 12
-3.2 Future Technologies and InsurTech. ..... 13
-4 Ethical Risk in General: Data, Bias and Do-It-Yourself Risk ..... 14
-4.1 Defining Ethical Risk with AI ..... 14
-4.2 Ethical Considerations for Actuaries Using AI ..... 15
-4.2.1 Accelerated Underwriting. ..... 15
-4.2.2 Access to Third-Party Data beyond Marketing Data ..... 15
-4.2.3 Reliance on Spurious Medical Markers from New Sources ..... 15
-4.3 Data Risk. ..... 16
-4.4 Bias. ..... 16
-4.4.1 "People" questions to ask about AI Bias ..... 17
-4.4.2 Data Questions to Ask about AI Bias ..... 18
-4.4.3 Management Questions to Ask about AI bias ..... 18
-4.5 Ethical Aspects of Automation ..... 18
-4.6 Personally Identifiable Information (PII) ..... 18
-4.7 Reliance on Repeatable Algorithms without Human Oversight. ..... 19
-4.8 Amateurish Development ..... 19
-4.9 Insurance Circular Letter No. 1 (2019) ..... 20
-5 Organizing the Actuarial Department for AI: Skills, Team, Diversity. ..... 21
-5.1 Skills Needed for Actuarial Development of AI ..... 21
-5.1.1 GLM (Generalized Linear Model) ..... 21
-5.1.2 Technology around AI ..... 21
-5.1 Technology Skills for Actuaries. ..... 22
-5.2 Graph Analysis. ..... 22
-5.2.1 Pricing Analysis ..... 23
-5.2.2 Agent Compensation ..... 23
-5.3 IT and AI Engineer Team ..... 23
-5.4 IT Role in Actuarial AI Team. ..... 23
-5.5 Ethical Review Board ..... 25
-6 Government and Regulatory Initiatives Concerning Ethics in AI ..... 26
-7 Conclusion: Suggested Path Forward ..... 27
-8 Appendix 1: Advanced Analytics Categories ..... 28
-8.1 What Is Predictive Analytics? ..... 28
-8.2 What Is Data Science? ..... 28
+1 Executive Summary ..... 5  
+2 AI, the Social Context and the Five Pillars of Ethical AI ..... 7  
+2.1 Defining AI ..... 7  
+2.2 The Social Context ..... 8  
+2.3 The Five Pillars of Ethical AI. ..... 10  
+2.3.1 Responsibility. ..... 10  
+2.3.2 Transparency ..... 11  
+2.3.3 Predictability ..... 11  
+2.3.4 Auditability. ..... 11  
+2.3.5 Incorruptibility ..... 11  
+2.4 Macro AI Ethics Obligations ..... 11  
+3 Digital Transformation Drives AI Adoption ..... 12  
+3.1 The Motivation for Digital Transformation. ..... 12  
+3.2 Future Technologies and InsurTech. ..... 13  
+4 Ethical Risk in General: Data, Bias and Do-It-Yourself Risk ..... 14  
+4.1 Defining Ethical Risk with AI ..... 14  
+4.2 Ethical Considerations for Actuaries Using AI ..... 15  
+4.2.1 Accelerated Underwriting. ..... 15  
+4.2.2 Access to Third-Party Data beyond Marketing Data ..... 15  
+4.2.3 Reliance on Spurious Medical Markers from New Sources ..... 15  
+4.3 Data Risk. ..... 16  
+4.4 Bias. ..... 16  
+4.4.1 "People" questions to ask about AI Bias ..... 17  
+4.4.2 Data Questions to Ask about AI Bias ..... 18  
+4.4.3 Management Questions to Ask about AI bias ..... 18  
+4.5 Ethical Aspects of Automation ..... 18  
+4.6 Personally Identifiable Information (PII) ..... 18  
+4.7 Reliance on Repeatable Algorithms without Human Oversight. ..... 19  
+4.8 Amateurish Development ..... 19  
+4.9 Insurance Circular Letter No. 1 (2019) ..... 20  
+5 Organizing the Actuarial Department for AI: Skills, Team, Diversity. ..... 21  
+5.1 Skills Needed for Actuarial Development of AI ..... 21  
+5.1.1 GLM (Generalized Linear Model) ..... 21  
+5.1.2 Technology around AI ..... 21  
+5.1 Technology Skills for Actuaries. ..... 22  
+5.2 Graph Analysis. ..... 22  
+5.2.1 Pricing Analysis ..... 23  
+5.2.2 Agent Compensation ..... 23  
+5.3 IT and AI Engineer Team ..... 23  
+5.4 IT Role in Actuarial AI Team. ..... 23  
+5.5 Ethical Review Board ..... 25  
+6 Government and Regulatory Initiatives Concerning Ethics in AI ..... 26  
+7 Conclusion: Suggested Path Forward ..... 27  
+8 Appendix 1: Advanced Analytics Categories ..... 28  
+8.1 What Is Predictive Analytics? ..... 28  
+8.2 What Is Data Science? ..... 28  
 
 ## Page 4
 8.3 Predictive Analytics versus Data Science ..... 28
