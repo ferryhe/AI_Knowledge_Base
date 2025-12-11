@@ -18,6 +18,14 @@ AI materials live under `Knowledge_Base_MarkDown/`, each with a Markdown source 
    ```
 4. Share the refreshed FAISS + metadata files (`AI_Agent/knowledge_base.faiss`, `AI_Agent/knowledge_base.meta.pkl`) with anyone else running the agent.
 
+## Finding Original Source Links
+- Requirements: `AI_Agent/.venv` Python, plus `SERPAPI_API_KEY` (or `LANGSEARCH_API_KEY`/`LANGSEARCH_ENDPOINT`) in `AI_Agent/.env`.
+- Run from repo root to search for sources and write `original_sources.md` (full results), archive each run under `working_runs/`, and refresh `final_original_sources.md` with only working, high-confidence links:
+  ```powershell
+  find_original_links.py --backend langsearch --max-results 8 --max-searches 250 --skip-existing-final
+  ```
+- To force a full refresh, drop `--skip-existing-final`. Use `--backend serpapi` to switch providers.
+
 ## Querying with the Agent
 - Quick-start instructions, environment variables, and troubleshooting live in `AI_Agent/README.md`.
 - For a fast CLI query on Windows PowerShell:
