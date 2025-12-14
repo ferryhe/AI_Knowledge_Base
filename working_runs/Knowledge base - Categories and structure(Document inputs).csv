@@ -1,0 +1,354 @@
+﻿Fields for repository,,,,,,,,,,,,
+,,,AI Agent,AI Agent,,,Tool ratings - later,,,,,
+File ID,Title,Category,Key words,Content,Published date,Version,Rating,Author,Organization,Format,Web address,
+,2025-03-ai-bulletin,,"
+Artificial Intelligence (AI)
+PD Edge+
+Learning Tracks
+Actuarial
+NAIC
+Insurance Industry
+Prompting
+Large Language Models (LLMs)
+Short-form Videos
+Data Science"," This document provides updates from the Society of Actuaries (SOA) PD Edge+ platform, focusing on artificial intelligence (AI) learning tracks, NAIC activities related to AI in insurance, and practical tips for prompting Large Language Models (LLMs). It highlights the new AI learning track within PD Edge+, including an overview course and short-form videos covering topics like AI in actuarial work, ethical considerations, and AI tools. The document also notes the NAIC's interest in understanding the insurance industry's use of AI in areas like pricing, underwriting, and claims, and the data fueling these applications. Finally, it offers several tips for effective prompting of LLMs, including specifying desired output formats, indicating the intended use of the response, and refining generated content",3/25/2025,,,SOA,SOA,pdf,https://www.soa.org/4934b1/globalassets/assets/files/resources/research-report/2025/2025-03-ai-bulletin.pdf,
+,"Literature Review: Artificial Intelligence
+and Its Use in Actuarial Work",,"Artificial Intelligence (AI)
+Actuarial Work
+Machine Learning
+Loss Reserving
+Underwriting
+Fraud Detection
+Claims
+Predictive Modeling
+Data Analytics
+Insurance"," This literature review report explores the transformative impact of Artificial Intelligence (AI) and Machine Learning on actuarial work, highlighting emerging technologies and providing a frame of reference for actuaries. The report is structured to cover various aspects, including an introduction to AI and its history, and specific applications within actuarial domains such as loss reserving, underwriting, and fraud & claims. It discusses the challenges in these areas and how AI methods can be utilized, often through case studies. The report also touches upon the benefits, drawbacks, and challenges of implementing AI in actuarial work. The research methodology involved reviewing articles and presentations, including those published in scientific journals, focusing on comprehensive descriptions of AI techniques in actuarial business cases. Actuaries were also contacted for insights into their firms' problem-solving using AI",,,,"icholas Yeo, Raymond Lai, Min Jyeh Ooi, Jie Yin Liew",SOA,pdf,https://www.soa.org/globalassets/assets/files/resources/research-report/2019/ai-actuarial-work.pdf,
+,Operationalizing LLMs - A Guide for Actuaries,,"Large Language Models (LLMs)
+Actuaries
+Prompt Engineering
+Retrieval Augmented Generation (RAG)
+LLM Benchmarks
+LLM Providers
+Risk and Governance
+Open Source LLMs
+Closed Source LLMs
+Operationalization","This guide provides a practical roadmap for actuaries to integrate Large Language Models (LLMs) into their work effectively and responsibly. It offers a high-level overview of the LLM landscape, including major providers like OpenAI, Anthropic, Meta, and Google. The report discusses how to evaluate and compare LLMs using benchmarks, emphasizing the limitations of general benchmarks and advocating for task-specific benchmarks. It explores the trade-offs between open-source and closed-source LLMs. The guide details techniques for leveraging LLMs, particularly prompt engineering and knowledge augmentation methods like Retrieval Augmented Generation (RAG). Finally, it provides a framework for understanding and managing the risks and governance considerations associated with LLM usage in actuarial practice",1/25/2025,,,Caesar Balona,SOA,pdf,https://www.soa.org/48ffb2/globalassets/assets/files/resources/research-report/2025/oper-genai-act-report.pdf,
+,"Avoiding Unfair Bias in Insurance
+Applications of AI Models",,"Unfair Bias
+Artificial Intelligence (AI)
+Insurance Models
+Data Elements
+Model Development Framework
+Bias Detection
+Bias Reduction
+Actuarial Applications
+Data Gathering
+Ethical Considerations","This research paper focuses on the critical issue of unfair bias in AI models within the insurance industry. Its objectives include identifying data elements and types more likely to introduce bias, exploring strategies to reduce bias in existing and new AI applications, and establishing a general process for bias analysis. The paper acknowledges the wide variety of insurance products and data sources, emphasizing how different applications of AI can unintentionally introduce unfair bias. It presents a nine-step AI model development process and highlights areas where bias can be introduced, such as data population evaluation and inappropriate model training. The research also includes questions asked during interviews to understand how organizations define and test for unfair output in AI models",8/22/2025,,,"Logan T. Smith, Emma Pirchalski, Ilana Golbin",SOA,pdf,https://www.soa.org/4a288a/globalassets/assets/files/resources/research-report/2022/avoid-unfair-bias-ai.pdf,
+,"Federated Learning for Insurance
+Companies",,"Federated Learning (FL)
+Privacy Preservation
+Insurance Companies
+Loss Modeling
+Underwriting
+Data Shortage
+Collaboration
+Horizontal Federated Learning (HFL)
+Vertical Federated Learning (VFL)
+Risk Management"," This report introduces federated learning (FL) as a privacy-preserving solution for collaboration in the insurance industry, particularly for enhancing machine learning models in areas like underwriting, loss modeling, reserving, and fraud detection. Traditional centralized data sharing poses challenges due to privacy concerns and the risk-averse nature of insurance companies. FL allows multiple parties (e.g., insurance companies) to train models collaboratively without sharing sensitive raw data, addressing data shortage and privacy issues. The report discusses different types of FL, such as horizontal FL (HFL) for companies with similar features and vertical FL (VFL) for those with different feature sets. It illustrates use cases in loss modeling and highlights potential applications in life and health sectors, such as refining longevity/mortality studies",2/24/2025,,," Panyi Dong, Zhiyu Quan, Tianyang Wang",SOA,pdf,https://www.soa.org/4916b8/globalassets/assets/files/resources/research-report/2024/federated-learning-insurance-companies.pdf,
+,"Using Interpretable Machine Learning
+Methods",,"Interpretable Machine Learning (IML)
+Fraud Detection
+Health Insurance
+Feature Importance
+Permutation Feature Importance (PFI)
+SHAP (SHapley Additive exPlanations)
+Model Interpretability
+Black-box Models
+Data Imbalance
+Business Interpretation","This report establishes a framework for implementing interpretable machine learning (IML) techniques in the context of health insurance fraud detection. It addresses the issue of class imbalance in fraud detection datasets and mentions the use of data imbalance techniques during preprocessing. The framework is structured into data preprocessing & model training, and the application of IML techniques. The report focuses on feature importance methods, including Permutation Feature Importance (PFI) and SHapley Additive exPlanations (SHAP), to understand the impact of input variables on the prediction of fraudulent claims. It also explores local and global model-agnostic methods like LIME and surrogate models. A dedicated section interprets the results of feature importance in alignment with business logic",1/24/2025,,,"Satya Sai Mudigonda, Prof Pallav Kumar Baruah, Phani Krishna Kandala, Rohan Yashraj Gupta, Srinand N Hegde, Sumanth Chebrolu",SOA,,https://www.soa.org/48f4a5/globalassets/assets/files/resources/research-report/2024/interpretable-ml-methods.pdf,
+,A Primer on Generative AI for Actuaries,,"Generative AI
+Actuaries
+Large Language Models (LLMs)
+Productivity
+Document Summarization
+Model Documentation
+Data Analysis
+Scenario Analysis
+Automation
+Prompt Engineering"," This primer introduces generative AI to actuaries, outlining its potential benefits and various applications within the insurance industry. It covers applications for general productivity such as summarizing documents and drafting content, as well as more specific actuarial tasks like model documentation and governance, enriching, manipulating, and analyzing data, scenario analysis, and improvements in automation and efficiency. The primer also touches upon applications in claims and underwriting. It discusses practical considerations, including limitations, architectural aspects, and the importance of prompt engineering and RAG",2/24/2025,,,"Stephen Carlin, Stephan Mathys",SOA,pdf,https://www.soa.org/496313/globalassets/assets/files/resources/research-report/2024/primer-generative-ai.pdf,
+,"Comparison of Regulatory Framework for
+Non-Discriminatory AI Usage in Insurance",,"AI Regulation
+Regulatory Framework
+Insurance Industry
+United States
+European Union (EU)
+China
+Canada
+NAIC
+EIOPA
+Cross-industry Regulation","This report provides a comparison of regulatory frameworks for Artificial Intelligence (AI) in the United States, European Union (EU), China, and Canada, with a specific focus on the insurance industry. It highlights the decentralized approach in the US, primarily through industry-specific regulations and state-level initiatives like the NAIC AI Bulletin and regulations in Colorado and New York. In contrast, the EU and China adopt more centralized, cross-industry approaches, with the EU AI Act representing a significant piece of legislation. Canada's approach is presented as a mix. The report touches upon relevant regulatory bodies like the NAIC and EIOPA and mentions specific regulations such as GDPR and DORA in the EU",8/24/2025,,,"David Schraub, Jing Lang, Zhibin Zhang, Mark A. Sayre",SOA,pdf,https://www.soa.org/4a1a8a/globalassets/assets/files/resources/research-report/2024/regulatory-framework-comparison-ai.pdf,
+,"Exploring Nontraditional Data Sources for AI-Driven Mortality Modeling
+and Forecasting",,"AI, mortality modeling, forecasting, nontraditional data sources, social media, wearable devices, environmental data, genetic data, electronic health records, data integration.","This essay discusses how AI is revolutionizing mortality modeling and forecasting by utilizing nontraditional data sources like social media, wearables, environmental data, genetics, mobile phones, and EHRs to improve accuracy beyond traditional statistical methods. The integration of these diverse data streams with AI algorithms allows for deeper insights into mortality risk factors. The essay also highlights the challenges of data quality and privacy that come with using these new sources",9/24/2025,,,Siyu Chen,SOA,pdf,https://www.soa.org/4a5e7a/globalassets/assets/files/resources/research-report/2024/impact-ai-mortality/2024-impact-ai-mort-essay-chen.pdf,
+,"Artificial Intelligence and the Measurement and Projection of Mortality
+Experience",,"Mortality statistics, cause of death, death certificates, reporting errors, electronic death registration systems (EDRS), artificial intelligence, medical records, public health, actuarial science, data quality.","This essay argues that AI could significantly improve the accuracy of cause-of-death reporting on death certificates in the US, which currently suffers from frequent errors. It suggests that AI-powered tools integrated with electronic death registration systems (EDRS) and electronic healthcare records could help identify inconsistencies and enhance data quality. This is presented as a potentially more effective approach than solely relying on improving physicians' certification practices",9/24/2025,,,David L. Driscoll,SOA,pdf,https://www.soa.org/4a5e7e/globalassets/assets/files/resources/research-report/2024/impact-ai-mortality/2024-impact-ai-mort-essay-driscoll.pdf,
+,The Impact of Artificial Intelligence on Mortality Modeling and Actuaries,,"AI, mortality modeling, forecasting, nontraditional data sources, machine learning, data privacy, bias, interpretability, actuarial science, validation.","This essay explores the impact of AI on mortality modeling and the actuarial profession, emphasizing how AI and machine learning can leverage nontraditional data sources (EHRs, social media, wearables, environmental sensors) for more granular mortality insights. It also addresses the key risks and challenges associated with AI adoption, such as data privacy, bias, and interpretability, and stresses the importance of rigorous validation of AI models",9/24/2025,,,Niranjan Rajendran,SOA,pdf,https://www.soa.org/4a5e82/globalassets/assets/files/resources/research-report/2024/impact-ai-mortality/2024-impact-ai-mort-essay-rajendran.pdf,
+,Improve Insurance Accessibility via Artificial Intelligence,,"AI, insurance, underwriting, pricing, mortality risk assessment, nontraditional data, machine learning, cancer, prediction, error quantification.",This essay proposes that AI can enhance insurance accessibility by enabling more precise mortality risk assessment through the use of new data and AI models. It uses the example of cancer patient mortality prediction to illustrate how AI can identify lower-risk individuals within high-risk groups. The essay also discusses the necessity of quantifying prediction errors for robust AI implementation in insurance underwriting and pricing,9/24/2025,,,Kailan Shang,SOA,pdf,https://www.soa.org/4a5e89/globalassets/assets/files/resources/research-report/2024/impact-ai-mortality/2024-impact-ai-mort-essay-shang.pdf,
+,"Precision and Prediction: Leveraging Artificial Intelligence in Mortality
+Modeling for Actuaries",,"AI, mortality modeling, forecasting, actuarial analysis, machine learning, deep learning, nontraditional data sources, prediction, data integration, pattern recognition","This essay details how AI can significantly enhance actuarial analysis of mortality data, introduce innovative forecasting methods, and leverage nontraditional data sources. It outlines various AI techniques like deep learning and NLP, and emphasizes the value of data from social media, wearables, and EHRs for achieving more accurate and personalized mortality predictions",9/24/2025,,,Tianyang Wang,SOA,pdf,https://www.soa.org/4a5e8d/globalassets/assets/files/resources/research-report/2024/impact-ai-mortality/2024-impact-ai-mort-essay-wang.pdf,
+,"The Application of Artificial Intelligence in Mortality Modeling and
+Forecasting: GBM, Data Cleaning, and Dynamic Mortality Tables",,"AI
+Mortality Modeling
+Forecasting
+Gradient Boosting Machine (GBM)
+Data Cleaning
+Outlier Detection
+Data Standardization
+Dynamic Mortality Tables
+Risk Assessment
+Preventive Care"," This essay highlights how AI enhances actuarial work in predicting mortality rates. It focuses on the Gradient Boosting Machine (GBM), an AI technique using iterative decision trees to analyze historical data for mortality prediction. A healthcare scenario illustrates GBM's use in identifying risk factors for enhanced preventive care.
+The essay also emphasizes the critical role of AI in improving data quality through automated data processing and cleaning, including outlier identification and data standardization/normalization. Furthermore, it discusses dynamic mortality tables, which leverage real-time data and AI, like ARIMA, to provide up-to-date mortality risk assessments, as shown in an insurance company scenario. The essay concludes by noting the risks and evolving responsibilities of actuaries in applying AI for mortality prediction",9/24/2025,,,Jiaming Zuo,SOA,pdf,https://www.soa.org/4a5e91/globalassets/assets/files/resources/research-report/2024/impact-ai-mortality/2024-impact-ai-mort-essay-zuo.pdf,
+,"The Retirement Reckoning—When Family Ties Clash with Financial
+Realities",,"AI advice
+Retirement choices
+Family dynamics
+Assisted living
+Financial advisor
+Human empathy
+Limitations of AI
+Decision-support system
+Caregiving
+Financial realities","This essay uses a narrative case study of the Johnson family to illustrate the complexities of retirement decisions, particularly concerning assisted living, and how AI-driven advice interacts with human realities. The story highlights the limitations of purely data-driven AI recommendations when faced with the emotional, financial, and personal nuances of family dynamics and healthcare needs. The family's journey involves seeking advice from a financial advisor who provides a more holistic perspective than the AI system. Ultimately, the essay emphasizes the necessity of balancing technological insights with human empathy and judgment in retirement planning.",8/24/2025,,,Stefanos Orfanos,SOA,pdf,https://www.soa.org/4a43e7/globalassets/assets/files/resources/research-report/2024/ai-retirement-risk-essays/ai-retirement-risks-essays-1-orfanos.pdf,
+,"Can Artificial Intelligence/Large Language Models Help Me with
+Retirement Planning? An Individual Perspective",,"AI (ChatGPT)
+Retirement planning
+Financial literacy
+Inaccurate calculations
+Incomplete information
+Individual perspective
+Limitations of LLMs
+Information source
+Financial analysis
+Human oversight","This essay examines the potential of AI, specifically ChatGPT, to assist individuals with retirement planning from a personal perspective. Through a series of questions and ChatGPT's responses, the author explores AI's ability to provide information and perform calculations. The analysis reveals that while AI can offer quick and general information, its responses can be incomplete, inaccurate, and lack crucial considerations like expenses, Social Security, and nuanced financial situations. The essay concludes that ChatGPT should not be relied upon for calculations without careful verification and emphasizes the importance of human judgment and financial literacy when using AI for retirement planning.",8/24/2025,,,Anna M. Rappaport,SOA,pdf,https://www.soa.org/4a43ea/globalassets/assets/files/resources/research-report/2024/ai-retirement-risk-essays/ai-retirement-risks-essays-2-rappaport.pdf,
+,A Retiree’s Guide to Artificial Intelligence risks and Mitigating Those Risks,,"AI risks
+Retiree fraud
+Deepfakes
+Voice cloning
+FraudGPT
+Phishing scams
+Cybersecurity
+Risk mitigation
+AI literacy
+Internet crime","This essay focuses on the risks posed by artificial intelligence to retirees, specifically in the realm of fraud and scams. It discusses how AI tools like deepfakes and sophisticated large language models (LLMs) like FraudGPT can enhance cybercriminal activities, including voice cloning for grandparent scams and personalized phishing attacks. The essay highlights the increasing financial losses suffered by older adults due to internet fraud and emphasizes the need for risk mitigation strategies at both individual and technological/policy levels, including AI literacy, critical thinking, and the labeling of AI-generated content.",8/24/2025,,,Gregory Whittaker,SOA,pdf,https://www.soa.org/4a43ec/globalassets/assets/files/resources/research-report/2024/ai-retirement-risk-essays/ai-retirement-risks-essays-3-whittaker.pdf,
+,Artificial Intelligence and Retirement Planning,,"AI in retirement
+Financial management
+Personalized plans
+Investment decisions
+Fraud detection
+Limitations of AI
+Human expertise
+Digital literacy
+Security and privacy
+AI tools for retirees"," This essay discusses the role of artificial intelligence in assisting retirees and pre-retirees with managing their financial future. It acknowledges that many older individuals may have limited experience with AI and outlines how AI tools can help with personalized retirement plans, investment decisions, income management, and fraud detection. However, the essay also cautions retirees to be aware of AI's limitations, to use it in conjunction with human experts, and to be mindful of privacy and security concerns. It suggests various AI-powered tools that retirees might find useful, depending on their specific needs.",8/24/2025,,,John Cutler,SOA,pdf,https://www.soa.org/4a43ef/globalassets/assets/files/resources/research-report/2024/ai-retirement-risk-essays/ai-retirement-risks-essays-5-cutler.pdf,
+,Artificial Intelligence as a Partner for Retirement Professionals: What Are the Issues?,,"AI for professionals
+Retirement management
+Organizational policy
+Quality control
+Fiduciary liability
+Legal compliance
+Human oversight
+Accuracy verification
+Limitations of AI
+Ethical use"," This essay explores artificial intelligence as a partner for retirement professionals, discussing the key issues and considerations for organizations using AI tools like ChatGPT. It highlights the potential for AI to assist with tasks such as documenting discussions and research but emphasizes the need for organizational policies, quality controls, and awareness of legal requirements. The essay draws parallels with the use of AI in medicine, stressing that AI should not replace professional judgment and that human oversight is crucial to ensure accuracy and ethical use, especially in areas with fiduciary liability. It also discusses the importance of confirming the accuracy of AI-generated calculations.",8/24/2025,,,Anna M. Rappaport,SOA,pdf,https://www.soa.org/4a43f3/globalassets/assets/files/resources/research-report/2024/ai-retirement-risk-essays/ai-retirement-risks-essays-7-rappaport.pdf,
+,The Impact of Artificial Intelligence on Financial Decisions for Retirees,,"AI impact on retirees
+Financial decisions
+Robo-advisors
+Financial literacy
+Ethical considerations
+Accessibility issues
+Data privacy
+Algorithmic bias
+Regulation
+Financial inclusion","This essay examines the significant impact of artificial intelligence on financial decisions for retirees, highlighting both the opportunities and challenges. It discusses how AI technologies like robo-advisors can enhance financial literacy, provide personalized advice, and improve fraud detection. However, the essay also emphasizes ethical considerations and accessibility issues, such as data privacy, algorithmic bias, and the digital divide. It calls for responsible technology deployment, regulatory oversight, and the need to ensure that AI benefits all retirees equitably.",8/24/2025,,,Mark Dennis,SOA,pdf,https://www.soa.org/4a43f1/globalassets/assets/files/resources/research-report/2024/ai-retirement-risk-essays/ai-retirement-risks-essays-6-dennis.pdf,
+,Pick a Payout Using AI,,"AI/bot
+Annuitization
+Payout options
+Principal protection
+Cash refund
+Period certain
+Beneficiary
+Lump-sum payment
+Retirement income
+Customer service","This essay explores the potential of AI to assist retirees in understanding and selecting annuitization options. It presents a fictional interaction between ""Jack,"" a retiree, and ""Claire,"" an AI/bot, to illustrate how AI can explain complex payout characteristics, such as principal protection through cash refunds or period certain options. The dialogue demonstrates AI's ability to provide information on different choices and their implications, highlighting its potential to serve as an annuitization specialist by providing all available options and descriptions.",8/24/2025,,,John Blocher,SOA,pdf,https://www.soa.org/4a43ee/globalassets/assets/files/resources/research-report/2024/ai-retirement-risk-essays/ai-retirement-risks-essays-4-blocher.pdf,
+,Risks Emerging from Artificial Intelligence Widespread Use,,"Artificial Intelligence (AI)
+Privacy Erosion
+Bias
+Economic Disruption
+Decision-Making
+Surveillance
+Data Misuse
+Algorithmic Bias
+Existential Threats
+Geopolitical Risks","This paper explores various risks associated with the widespread use of artificial intelligence, focusing on privacy erosion, economic disruption, and biased decision-making. Regarding privacy, it discusses examples like AI-powered surveillance, human tracking in self-driving cars, and the data collection practices of technologies like Amazon's Just Walk Out and social media platforms, highlighting potential misuse and lack of consent. In terms of economic disruption, the paper mentions the potential for job displacement due to AI-driven automation. The section on biased decision-making provides examples in education, online proctoring, and the use of ChatGPT, illustrating how biases in training data can lead to discriminatory outcomes. The paper also touches upon long-term existential threats, including risks from superintelligent AI and compromised autonomous systems, as well as geopolitical risks related to power imbalances, cyberattacks, misinformation, and algorithmic censorship. The conclusion emphasizes the need to proactively address these risks to harness AI's benefits while minimizing harm",8/24/2025,,,"Hanchen (Henry) Wang, Yongqi Liang",SOA,pdf,https://www.soa.org/48ce8a/globalassets/assets/files/resources/research-report/2024/ai-risk-essays/liang-wang-risks-emerging-ai-widespread-use.pdf,
+,In Praise of Actuarial Judgment and the Dangers of Relying on Historical Data,,"Actuarial Judgment
+Artificial Intelligence (AI)
+Historical Data
+Over-reliance
+Risk Assessment
+Data Quality
+Bias
+Reasonableness Check
+Mortality Risks
+Supervision","This essay argues that over-reliance on historical data and AI in actuarial practice can be dangerous and lead to sub-optimal outcomes, emphasizing the continued necessity of actuarial judgment. While AI can analyze large datasets and identify patterns, it may not ask the right questions, assess data quality or relevance, or handle outliers effectively without human oversight. The author contrasts AI's algorithmic approach with the skilled actuary's application of judgment. The essay discusses the importance of context, skepticism, and reasonableness checks (the ""gut check"") in actuarial analysis, highlighting how AI outputs need proper supervision, governance, and validation. The author also explores potential future mortality risks identified by ChatGPT, underscoring the need to adjust historical data based on anticipated changes. The conclusion reiterates that AI is a valuable tool but cannot replace the core functions of an actuary, particularly in assessing data quality, choosing the analysis trajectory, and ensuring the reasonableness of findings.",8/24/2025,,,Sam Gutterman,SOA,pdf,https://www.soa.org/4a3f2c/globalassets/assets/files/resources/research-report/2024/ai-risk-essays/gutterman-in-praise-of-actuarial-judgment.pdf,
+,"Artificial Intelligence Discrimination: Cause, Damage and Mitigation",,"AI Discrimination
+Bias in AI
+Training Data Bias
+Algorithmic Bias
+Prediction Bias
+Data Imbalance
+Insurance Applications
+Mitigation Strategies
+Fairness
+Transparency","This paper discusses the issue of artificial intelligence discrimination, outlining its causes, potential damage, and mitigation strategies. Despite the promise of unbiased decision-making, AI can exhibit biases stemming from training data, algorithms, and even the predictions themselves. The author provides examples of biases in healthcare, recruitment, and image generation. The paper illustrates how data imbalance can lead to poor predictions for rare cases, even with high overall accuracy. In the insurance industry, AI bias can manifest in unfair pricing, underwriting, claim processing, and risk management. The consequences of AI bias include economic inequality, social unrest, and loss of trust in the technology. The paper proposes several mitigation strategies, including balancing datasets, adjusting error functions, collecting more diverse data, and using appropriate performance measures. It also emphasizes the importance of good AI practices, domain knowledge, diversity in talents, and transparency to combat bias",8/24/2025,,,Kailan Shang,SOA,pdf,https://www.soa.org/4a3f30/globalassets/assets/files/resources/research-report/2024/ai-risk-essays/shang-ai-discrimination.pdf,
+,Catastrophic Risks of AI-Based Chatbots in Educational Systems,,"AI-Based Chatbots
+Educational Systems
+Privacy Risks
+Security Risks
+Ethical Dilemmas
+Bias
+Misinformation
+Critical Thinking
+Blockchain Technology
+Data Integrity","This essay investigates the potential catastrophic risks of using AI-based chatbots in educational systems, despite their potential to improve learning and teacher productivity. The author highlights concerns related to the handling of sensitive student data, raising privacy and security issues. Ethical dilemmas, particularly biases in algorithms that could skew evaluations and recommendations, are also discussed. The paper also points out the risk of over-reliance on chatbots diminishing critical thinking skills and the potential for misinformation dissemination. To mitigate these risks, the author proposes a novel solution: leveraging blockchain technology to enhance the security, transparency, and integrity of AI-based chatbots in education. Blockchain's features like immutability and decentralization can help create tamper-proof records and ensure data integrity. The conclusion emphasizes the need for collaboration and further research to ensure the responsible and secure use of AI in education through innovative solutions like blockchain",8/24/2025,,,Ali M. Saghiri,SOA,pdf,https://www.soa.org/4a3f4c/globalassets/assets/files/resources/research-report/2024/ai-risk-essays/saghiri-ai-based-chatbots.pdf,
+,Mitigate Biased Decision-Making in AI Algorithms,,"Algorithmic Bias
+Biased Data
+Fairness
+Insurance Industry
+Actuarial Analysis
+Risk Classification
+Data Preprocessing
+Explainable AI (XAI)
+Bias Mitigation
+Ethical Considerations","This paper addresses the need to mitigate biased decision-making in AI algorithms, particularly within the insurance sector. It outlines several factors that contribute to algorithmic bias, including biased training data, data selection bias, data labeling bias, algorithm design choices, feedback loop effects, contextual biases, human involvement, and lack of diversity. The paper explains the consequences of algorithmic bias on actuarial analysis, such as discriminatory outcomes in underwriting and pricing, and inaccuracies in risk classification, experience studies, reserving, and modeling. Examples are provided to illustrate these impacts. The paper then details various approaches and techniques for reducing and mitigating algorithmic bias, such as using diverse data, data preprocessing, fairness constraints, explainable AI (XAI), bias audits, human oversight, sensitive feature removal, regular monitoring, and diverse teams. The conclusion emphasizes the importance of prioritizing fairness, transparency, and inclusivity in AI development to achieve more reliable and ethical AI-driven decision-making in insurance",8/24/2025,,,Jiaming Zuo,SOA,pdf,https://www.soa.org/4a3f62/globalassets/assets/files/resources/research-report/2024/ai-risk-essays/zuo-mitigate-biased-decision.pdf,
+,Plausible Risk of Structural Racism from the Widespread Use of AI,,"Structural Racism
+Artificial Intelligence (AI)
+Insurance
+Bias
+Discrimination
+Proxies
+Disparate Impact
+Black Box Algorithms
+Data Bias
+Regulation","This paper discusses the plausible risk of structural racism arising from the widespread use of AI in insurance. While AI offers benefits in processing data for pricing and risk evaluation, it can also perpetuate biases present in the data it is trained on, leading to unfair discrimination against protected groups. The authors highlight the problem of proxies, where seemingly neutral factors like zip codes can correlate with race and income, resulting in disparate impact. The ""black box"" nature of some AI algorithms makes it difficult to understand and address these biases. The paper provides examples of how AI can lead to higher premiums for minority groups and inequities in healthcare program enrollment. It also notes how differences in technology access and literacy can lead to discriminatory outcomes in claims processing. The authors conclude by discussing evolving legal and regulatory landscapes and proactive measures insurers can take to mitigate unfair discrimination in AI, including focusing on data, models, and outputs",8/24/2025,,,"Rajeshwarie VS, Vivek Gupta",SOA,pdf,https://www.soa.org/4a3f52/globalassets/assets/files/resources/research-report/2024/ai-risk-essays/iyer-gupta-plausible-risk-of-structural-racism.pdf,
+,"Actuarial Professionalism Considerations
+for Generative AI",,"Generative AI (GenAI)
+Actuarial Standards of Practice (ASOPs)
+Professionalism
+Validation
+Bias
+Confidentiality
+Disclosure
+Model Drift
+Transparency
+Ethical Considerations","The document ""Actuarial Professionalism Considerations for Generative AI"" outlines how actuaries can responsibly use generative AI (GenAI) in their work. It emphasizes the importance of adhering to the Code of Professional Conduct, Qualification Standards, and Actuarial Standards of Practice (ASOPs), particularly ASOP No. 56. Actuaries should evaluate the appropriateness of GenAI for their assignments, disclose their reliance on AI tools, and ensure they are qualified to use AI. The paper highlights the need for thorough validation of AI models, considering potential biases, errors, and model drift. Documentation should focus on transparency and reproducibility. The conclusion stresses balancing GenAI's potential with maintaining professional standards, integrity, and ethical considerations. Overall, the paper provides a framework for integrating GenAI into actuarial practice while upholding professionalism.",9/24/2025,,,AAA,AAA,pdf,https://www.actuary.org/sites/default/files/2024-09/professionalism-paper-generative-ai.pdf,
+,AI ethics and regulation in insurance: Actuaries uniquely positioned for success,,"Artificial Intelligence (AI)
+Consumer Privacy Protection Act (CPPA)
+Bias
+Discrimination
+Actuaries
+Ethics
+Regulations
+Pricing Algorithms
+Fairness
+Insurance","This document discusses the ethical and regulatory challenges associated with the use of AI in the insurance industry. Key points include:
+
+Regulatory Landscape: The Consumer Privacy Protection Act (CPPA) in Canada addresses accountability, transparency, and dispute resolution in AI usage.
+Ethical Considerations: AI algorithms can introduce biases, potentially leading to unfair discrimination in pricing and underwriting1.
+Role of Actuaries: Actuaries are well-positioned to lead AI initiatives due to their technical expertise, business knowledge, and professional judgment",9/21/2025,,,"Joel Li,  Rolly Molisho, Harrison Jones",CIA,HTML,https://www.cia-ica.ca/news/ai-ethics-and-regulation-in-insurance-actuaries-uniquely-positioned-for-success/,
+,Harnessing AI and how actuaries can use it to thrive,,"Machine Learning (ML)
+Training Programs
+AI-powered Tools
+Python
+Innovation
+Workshops
+Data Analysis
+Underwriting
+Customer Service
+Hackathons","This document explores practical ways actuaries can engage with AI technology. Key initiatives include:
+
+Training Programs: Specialized training in AI and machine learning tailored for actuaries.
+Development of AI Tools: Investment in AI-powered tools for data analysis, underwriting, claims processing, and customer service2.
+Community Building: Establishing forums for knowledge sharing and organizing hackathons to foster innovation2.",7/24/2025,,,Jing Lang,CIA,HTML,https://www.cia-ica.ca/news/harnessing-ai-and-how-actuaries-can-use-it-to-thrive/,
+,Revolutionizing Actuarial Work with Generative AI: A Glimpse into the Future,,"Generative AI
+Large Language Models (LLMs)
+Text Generation
+Summarization
+Underwriting
+Tokenization
+Machine Learning
+Content Generation
+Scenario Analysis
+Model Validation","This document highlights the transformative potential of generative AI in actuarial work. Key insights include:
+
+Generative AI Overview: Explanation of generative AI and its applications, such as text, image, and code generation.
+Impact on Actuarial Work: Generative AI can automate tasks like scenario analysis, model validation, and report generation, enhancing efficiency and innovation3.
+Future Prospects: Actuaries should build a strong foundation in generative AI principles and explore tools like GPT for language processing3.",11/24/2025,,,"Cem Unlubayrak, Simon Girard",CIA,HTML,Revolutionizing Actuarial Work with Generative AI: A Glimpse into the Future - Canadian Institute of Actuaries | Institut canadien des actuaires,
+,Response to DISR - Mandatory guardrails for AI,Policy Submission,"AI regulation, guardrails, public policy, risk classification","Response to Australian Government's consultation on mandatory AI guardrails, calling for outcome-focused regulation and risk-based approaches.",10/2/2024,Final,,Actuaries Institute,"Department of Industry, Science and Resources (Australia)  Response to DISR: Mandatory guardrails for AI",,https://consult.industry.gov.au/ai-mandatory-guardrails,
+,Automated Decision-Making Systems,Information Note,"automated decisions, ethics, governance, fairness, accountability",Guidance for actuaries on best practices and principles when designing or assessing automated decision systems.,10/1/2020,Final,,"Data Analytics Practice Committee, Actuaries Institute",Institute of Actuaries of Australia Automated Decision Making Systems,HTML,https://actuariesinstitute.github.io/cookbook/docs/automated_decision.html,
+,Building Tomorrow: Preparing Australia for the Age of AI,Dialogue Paper,"AI strategy, public policy, skills gap, infrastructure, talent","Calls for national strategy and investment to address AI literacy, infrastructure, and workforce readiness.",5/1/2025,First edition,,"Jon Shen, Actuaries Institute",Actuaries Institute  Building Tomorrow: Preparing Australia for the Age of AI,,https://www.actuaries.asn.au/research-analysis/thought-leadership/building-tomorrow-ai,
+,Agent Design Pattern Catalogue: A Collection of Architectural Patterns for Foundation Model Based Agents,Research Paper,"design patterns, foundation models, AI agents, architecture","Catalogue of 18 design patterns for AI agents using foundation models, including decision models and trade-offs.",11/7/2024,Preprint,,"Yue Liu et al., CSIRO Data61",CSIRO Agent Design Pattern Catalogue: A Collection of Architectural Patterns for Foundation Model Based Agents,,https://arxiv.org/abs/2405.10467,
+,Why You Should Not Trust Interpretations in Machine Learning,Conference Paper,"interpretability, machine learning, PD plots, adversarial attacks",Demonstrates vulnerabilities in interpretation tools like PD plots using adversarial frameworks.,5/1/2024,Conference version,,"Xi Xin, Giles Hooker, Fei Huang","Xi Xin, Giles Hooker, Fei Huang (UNSW & UPenn)  Why You Should Not Trust Interpretations in Machine Learning",,https://arxiv.org/pdf/2404.18702,
+,AI in insurance and insuring AI,Conference Paper,"insurance, AI risks, regulation, product innovation","Explores regulatory impacts, risk profiles, and new insurance products related to AI.",5/1/2024,Conference version,,"Jonathan Cohen, Kushal Mithal",Anat Lior (Harvard JOLT)  Insuring AI: The Role of Insurance in Artificial Intelligence Regulation,PDF,https://jolt.law.harvard.edu/assets/articlePDFs/v35/2.-Lior-Insuring-AI.pdf,
+,Generative AI for Actuaries: Exploring New Possibilities,Discussion Article,"generative AI, LLMs, actuarial applications, ChatGPT, productivity","Introduces actuaries to generative AI tools like ChatGPT, exploring use cases in communication, coding, and data analysis.",4/1/2023,Published site Article,,"Jacky Poon, Ean Chan, Jin Cui, Kriti Khullar, Amanda Aitken, Estelle Liu, Henry Ma",Actuary institute Australia,HTML,https://www.actuaries.asn.au/research-analysis/generative-ai-for-actuaries-exploring-new-possibilities,
+,"AI, Actuaries, and Education",Conference Paper,"education, AI literacy, ethics, learning design, professional skills",Explores integration of AI into actuarial education and the development of best practices for teaching and learning.,5/1/2025,Conference version,,Colin Priest,Actuary institute Australia,PDF,https://content.actuaries.asn.au/resources/resource-ce6yyqn64sx3-786882053-16095,
+,Artificial Intelligence and Discrimination in Insurance Pricing and Underwriting,Guidance Resource,"insurance, pricing, underwriting, anti-discrimination, regulation",Provides practical advice to avoid unlawful discrimination when applying AI to insurance pricing and underwriting.,12/1/2022,Published resource,,Actuaries Institute in collaboration with Australian Human Rights Commission,Actuary institute Australia,PDF,https://www.actuaries.asn.au/research-analysis/thought-leadership/guidance-resource-artificial-intelligence-and-discrimination-in-insurance-pricing-and-underwriting,
+,The AI-Powered Actuary: Amplifying Our Value,Thought Leadership,"actuarial profession, AI transformation, ethics, risk, future skills",Discusses how AI is transforming actuarial work and the professionâ€™s future role in an AI-augmented world.,11/1/2024,Published site Article,,Actuaries Institute,Actuary institute Australia,PDF,https://www.actuaries.asn.au/the-ai-power-actuary-amplifying-our-value,
+,AI and Data Science Cookbook,Practical guides,"data science, machine learning, actuarial techniques, Python, best practice","An interactive, open-source cookbook by the Actuaries Institute providing code examples, explanations, and guidance on applying AI and data science techniques in actuarial work. Includes modules on data preprocessing, model validation, interpretability, and model deployment, with a focus on reproducibility and transparency.",Ongoing (publicly available; first published ~2023),Live / evolving,,"Data Science and AI Practice Committee, Actuaries Institute",Actuary institute Australia,Online (JupyterBook site),Actuaries’ Analytical Cookbook — Actuaries' Analytical Cookbook,
+,Case Study: French Motor Third-Party Liability Claims,AI in actuarial Science,"data science, machine learning, predictive modeling, claim frequency, motor insurance, regression trees, boosting machine, neural network, generalized linear models, feature engineering, covariate selection.","This tutorial compares classical generalized linear models for claim frequency modeling to regression tree, boosting machine and neural network approaches. We explore these methods, discuss their calibration and study their predictive performance on an explicit motor third-party liability insurance data set. The results of the case study show that a simple generalized linear model does not capture interactions of feature components appropriately (unless manual feature engineering is done), whereas the other methods are able to address these interactions more successfully",3/3/2020,,,"Alexander Noll, Robert Salzmann, Mario V. W¨uthrich",Swiss Association of Actuaries ,pdf,https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3164764,https://www.actuarialdatascience.org/ADS-Tutorials/
+,Insights from Inside Neural Networks,AI in actuarial Science,"neural networks, architecture, over-fitting, loss function, dropout, regularization, LASSO, ridge, gradient descent, class imbalance, bias regularization, balance property, car insurance, claim frequency, Poisson regression model, machine learning, deep learning.","We provide a tutorial that illuminates different aspects that need to be considered when fitting neural network regression models to claim frequency insurance data. We discuss feature pre-processing, choice of loss function, choice of neural network architecture, class imbalance problem, as well as over-fitting and bias regularization. This discussion is based on a publicly available real car insurance data set.",4/23/2020,,,"Andrea Ferrario,
+Alexander Noll,
+Mario V. W¨uthrich",Swiss Association of Actuaries ,pdf,https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3226852,https://www.actuarialdatascience.org/ADS-Tutorials/
+,Nesting Classical Actuarial Models into Neural Networks,AI in actuarial Science,"Neural networks, architecture, car insurance, generalized linear models, embedding, nesting, embedding layers, one-hot encoding, dummy coding, representation learning, claims frequency, Poisson regression model, machine learning, deep learning.","Neural network modeling often suffers the deficiency of not using a systematic way of improving classical statistical regression models. In this tutorial we exemplify the proposal of. We embed a classical generalized linear model into a neural network architecture, and we let this nested network approach explore model structure not captured by the classical generalized linear model. In addition, if the generalized linear model is already close to optimal, then the maximum likelihood estimator of the generalized linear model can be used as initialization of the fitting algorithm of the neural network. This saves computational time because we start the fitting algorithm in a reasonable parameter. As a by-product of our derivations, we present embedding layers and representation learning which often provides a more efficient treatment of categorical features within neural networks than dummy and one-hot encoding.",1/22/2019,,,"J¨urg Schelldorfer,
+Mario V. W¨uthrich",Swiss Association of Actuaries ,pdf,https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3320525,https://www.actuarialdatascience.org/ADS-Tutorials/
+,On Boosting: Theory and Applications,AI in actuarial Science,"machine learning, boosting, predictive modeling, R, Python, car insurance, Kaggle, Porto Seguro, AdaBoost, XGBoost.","We provide an overview of two commonly used boosting methodologies. We start with the description of different implementations as well as the statistical theory behind selected algorithms which are widely used by the machine learning community, then we discuss a case study focusing on the prediction of car insurance claims in a fixed future time interval. The results of the case study show that, overall, XGBoost performs better than AdaBoost and it shows best performance when shallow trees, moderate shrinking, the number of iterations increased with respect to default as well as subsampling of both features and training data points are considered.",6/11/2019,,,"Andrea Ferrario,
+Roger H¨ammerli",Swiss Association of Actuaries ,pdf,https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3402687,https://www.actuarialdatascience.org/ADS-Tutorials/
+,Unsupervised Learning: What is a Sports Car?,AI in actuarial Science,"principal components analysis (PCA), biplot, autoencoder, bottleneck neural network (BNN), minimal spanning tree (MST), K-means clustering, K-medoids clustering, partitioning around medoids (PAM) algorithm, expectation-maximization (EM) algorithm, clustering with Gaussian mixture models (GMMs), variational autoencoder (VAE), t-distributed stochastic neighbor embedding (t-SNE), model-based clustering, uniform manifold approximation and projection (UMAP), self-organizing maps (SOM), Kohonen map, multi-dimensional scaling (MDS).","This tutorial studies unsupervised learning methods. Unsupervised learning methods are techniques that aim at reducing the dimension of data (covariables, features), cluster cases with similar features, and graphically illustrate high dimensional data. These techniques do not consider response variables, but they are solely based on the features themselves by studying incorporated similarities. For this reason, these methods belong to the field of unsupervised learning methods. The methods studied in this tutorial comprise principal components analysis (PCA) and bottleneck neural networks (BNNs) for dimension reduction, K-means clustering, K-medoids clustering, partitioning around medoids (PAM) algorithm and clustering with Gaussian mixture models (GMMs) for clustering, and variational autoencoder (VAE), t-distributed stochastic neighbor embedding (t-SNE), uniform manifold approximation and projection (UMAP), self-organizing maps (SOM) and Kohonen maps for visualizing high dimensional data.",10/9/2019,,,"Simon Rentzmann,
+Mario V. W¨uthrich",Swiss Association of Actuaries ,pdf,https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3439358,https://www.actuarialdatascience.org/ADS-Tutorials/
+,Lee and Carter go Machine Learning: Recurrent Neural Networks,AI in actuarial Science,"Recurrent neural network (RNN), long short-term memory (LSTM), gated recurrent unit (GRU), Lee–Carter (LC) model, mortality forecasting, feed-forward neural network (FNN)","In this tutorial we introduce recurrent neural networks (RNNs), and we describe the two most popular RNN architectures. These are the long short-term memory (LSTM) network and gated recurrent unit (GRU) network. Their common field of application is time series modeling, and we demonstrate their use on a mortality rate prediction problem using data from the Swiss female and male populations.",8/22/2019,,,"Ronald Richman,
+Mario V. W¨uthrich",Swiss Association of Actuaries ,pdf,https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3441030,https://www.actuarialdatascience.org/ADS-Tutorials/
+,"The Art of Natural Language Processing: Classical, Modern and Contemporary Approaches to Text Document Classification",AI in actuarial Science,"natural language processing, bag-of-words models, word embeddings, machine learning, recurrent neural networks, deep learning, Python, Tensorflow 2.0, Keras.","In this tutorial we introduce three approaches to preprocess text data with Natural Language Processing (NLP) and perform text document classification using machine learning. The first approach is based on ‘bag-of-’ models, the second one on word embeddings, while the third one introduces the two most popular Recurrent Neural Networks (RNNs), i.e. the Long Short-Term Memory (LSTM) and Gated Recurrent Unit (GRU) architectures. We apply all approaches on a case study where we classify movie reviews using Python and Tensorflow 2.0. The results of the case study show that extreme gradient boosting algorithms outperform adaptive boosting and random forests on bag-of-words and word embedding models, as well as LSTM and GRU RNNs, but at a steep computational cost. Finally, we provide the reader with comments on NLP applications for the insurance industry.",3/1/2020,,,"Andrea Ferrario,
+Mara N¨agelin",Swiss Association of Actuaries ,pdf,https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3547887,https://www.actuarialdatascience.org/ADS-Tutorials/
+,Peeking into the Black Box,AI in actuarial Science,"XAI, machine learning, explainability, interpretability, black box models, model-agnostic technique, flashlight, motor insurance, claims frequency.",This tutorial gives an overview of tools for explaining and interpreting black box machine learning models like boosted trees or deep neural networks. All our methods are illustrated on a publicly available real car insurance data set on claims frequencies,5/7/2020,,,"Christian Lorentzen,
+Michael Mayer",Swiss Association of Actuaries ,pdf,https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3595944,https://www.actuarialdatascience.org/ADS-Tutorials/
+,Convolutional neural network case studies: (1) anomalies in mortality rates (2) image recognition,AI in actuarial Science,"Convolutional neural network, CNN, regression, classification, mortality rates, image recognition.","We provide a general introduction to convolutional neural networks (CNNs) in this tutorial. CNNs are particularly well suited to find common spatial structure in images or time series. As an insurance related example for life & health insurance we illustrate how to use a CNN to detect anomalies in mortality rates taken from the Human Mortality Database (HMD); the anomalies are caused by migration between countries and other errors. As a second example, we study a CNN to classify images of handwritten digits taken from one of the most widely used benchmark datasets, the Modified National Institute of Standards and Technology (MNIST) dataset. Our aim is to explore and discuss the building blocks and the properties of these CNNs, and we showcase their use.",7/19/2020,,,"Daniel Meier,
+Mario V. W¨uthrich",Swiss Association of Actuaries ,pdf,https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3656210,https://www.actuarialdatascience.org/ADS-Tutorials/
+,LocalGLMnet: a deep learning architecture for actuaries,AI in actuarial Science,"LocalGLMnet, neural network, deep learning, variable selection, interactions, explainable artificial intelligence, XAI, generalized linear model, GLM, tabular data, variable importance, Shapley additive explanation, natural language processing, NLP, text recognition, recurrent neural network, long short-term memory cell, LSTM","The purpose of this tutorial is to discuss the LocalGLMnet architecture which is tailored to the needs of actuaries. The LocalGLMnet is a flexible network architecture for tabular data that allows for variable selection, the study of interactions, gives nice interpretations and allows to rank variable importance. We explore a LocalGLMnet on accident insurance claims data for which we also have short claim descriptions. In a second step we try to understand the predictive power of these claim descriptions by adding a recurrent neural network layer to process the claim texts into tabular data.",8/4/2021,,,"J¨urg Schelldorfer,
+Mario V. W¨uthrich",Swiss Association of Actuaries ,pdf,https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3900350,https://www.actuarialdatascience.org/ADS-Tutorials/
+,Model Comparison and Calibration Assessment,AI in actuarial Science,"actuarial science, backtesting, calibration, classification, consistency, data science, identification functions, machine learning, model comparison, predictive performance, propriety, scoring functions, scoring rules, supervised learning","One of the main tasks of actuaries and data scientists is to build good predictive models for certain phenomena such as the claim size or the number of claims in insurance. These models ideally exploit given feature information to enhance the accuracy of prediction. This user guide revisits and clarifies statistical techniques to assess the calibration or adequacy of a model on the one hand, and to compare and rank different models on the other hand. In doing so, it emphasises the importance of specifying the prediction target functional at hand a priori (e.g. the mean or a quantile) and of choosing the scoring function in model comparison in line with this target functional. Guidance for the practical choice of the scoring function is provided. Striving to bridge the gap between science and daily practice in application, it focuses mainly on the pedagogical presentation of existing results and of best practice. The results are accompanied and illustrated by two real data case studies on workers’ compensation and customer churn.",7/27/2023,,,"Tobias Fissler,
+Christian Lorentzen,
+Michael Mayer",Swiss Association of Actuaries ,pdf,https://arxiv.org/abs/2202.12780,https://www.actuarialdatascience.org/ADS-Tutorials/
+,Actuarial applications of natural language processing using transformers: Case studies for using text features in an actuarial context,AI in actuarial Science,Natural language processing; transformer; multilingual models; domain-specific fine-tuning; integrated gradients; extractive question answering; zero-shot classification; topic modelling,"This paper demonstrates workflows to incorporate text data into actuarial classification and regression tasks. The main focus is on methods employing transformer-based models. A dataset of car accident descriptions with an average length of 400 words, available in English and German, and a dataset with short property insurance claims descriptions, are used to demonstrate these techniques. The case studies tackle challenges related to a multilingual setting and long input sequences. They also show ways to interpret model output and to assess and improve model performance, by fine-tuning the models to the domain of application or to a specific prediction task. Finally, the paper provides practical approaches to handle classification tasks in situations with no or only few labelled data. The results achieved by using the language-understanding skills of off-the-shelf natural language processing (NLP) models with only minimal pre-processing and fine-tuning clearly demonstrate the power of transfer learning for practical applications",3/7/2024,,,"Andreas Troxler,
+Jürg Schelldorfer",Swiss Association of Actuaries ,pdf,Actuarial applications of natural language processing using transformers: Case studies for using text features in an actuarial context | British Actuarial Journal | Cambridge Core,https://www.actuarialdatascience.org/ADS-Tutorials/
+,Gini Index and Friends,AI in actuarial Science,"Gini index, Gini score, Gini coefficient, accuracy ratio, consistency, consistent scoring, auto-calibration, Lorenz curve, concentration curve, cumulative accuracy profile, CAP, receiver operating characteristics curve, ROC curve, area under the curve, AUC, model selection, binary classification, regression model.","In the machine learning community, the Gini index is a very popular score for model selection,
+and it is also used in actuarial science for evaluating insurance pricing models. The purpose
+of this tutorial is to discuss the Gini index, both its version in economics and its version
+in machine learning, which differ. We discuss its relationship to the area under the curve
+(AUC) of the receiver operating characteristics (ROC) curve, which is often used for model
+selection in binary classification problems. A main deficiency of the Gini index is that it
+does not give us a consistent scoring function. Therefore, simply maximizing the Gini index
+may lead to wrong decisions. The issue is that the Gini index is a rank-based score that
+is not calibration-sensitive. However, if we use the Gini index for scoring within the class
+of auto-calibrated regression models, it gives us a strictly consistent scoring function and,
+henceforth, a sensible model selection tool. This will be discussed in this tutorial.",10/14/2022,,,"Christian Lorentzen, Michael Mayer,
+Mario V. W¨uthrich‡",Swiss Association of Actuaries ,pdf,https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4248143,https://www.actuarialdatascience.org/ADS-Tutorials/
+,SHAP for Actuaries: Explain any Model,AI in actuarial Science,"XAI, explainability, machine learning, SHAP, Shapley values, regression mod","This tutorial gives an overview of SHAP (SHapley Additive exPlanation), one of the most commonly used techniques for examining a black-box machine learning (ML) model. Besides providing the necessary game theoretic background, we show how typical SHAP analyses are performed and used to gain insights about the model. The methods are illustrated on a simulated insurance data set of car claim frequencies using different ML models and different SHAP algorithms",3/15/2023,,,"Michael Mayer,
+Daniel Meier,
+Mario V. W¨uthrich‡",Swiss Association of Actuaries ,pdf,https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4389797,https://www.actuarialdatascience.org/ADS-Tutorials/
+,Privacy Preserving Machine Learning,AI in actuarial Science,"Life & health, sensitive personal data, cryptography, security, multiparty homomorphic encryption, logistic regression, Cox proportional hazards model, neural network, hazard ratio, relative risk, odds ratio, federated machine learning","This tutorial provides an introduction into the evolving topic of privacy preserving machine learning.
+It discusses how to run models on data from potentially multiple data providers without any data
+provider having to share any non-encrypted data with any other party. In particular, for use cases
+requiring large amounts of sensitive personal data, and in the context of strict regulations like GDPR
+in the European Union, this topic is highly relevant. We introduce the concept of (multiparty)
+homomorphic encryption and demonstrate the approach on two synthetic datasets of personal health
+information. Furthermore, this tutorial also provides an introduction into the most common (survival)
+models to predict health outcomes",9/30/2023,,,"Daniel Meier,
+Juan Ram´on Troncoso-Pastoriza",Swiss Association of Actuaries ,pdf,https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4595287,https://www.actuarialdatascience.org/ADS-Tutorials/

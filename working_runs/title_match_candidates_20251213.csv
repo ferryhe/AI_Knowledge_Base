@@ -1,0 +1,192 @@
+﻿"filename","md_h1_title","md_possible_source_url","md_sha1_hash","candidate_rank","match_score","match_reason","csv_row_id","csv_title","csv_org","csv_category","csv_subcategory","csv_publish_date","csv_type","csv_keywords","csv_url"
+"201911_ethical_use_of_artifical_intelligence_for_actuaries.md","201911 Ethical use of Artifical Intelligence for Actuaries","http://cytora.com/ai-guide/),","026a5842330e87074cad93874027cf146ad85d01","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"201912_ai_actuarial_work.md","201912 ai-actuarial-work","https://www.soa.org/globalassets/assets/files/resources/research-report/2019/ai-actuarial-work.pdf","38ab1b3d7eb6c5237795868e7d44e98757d224b3","1","100","URL_MATCH","2","Literature Review: Artificial Intelligence
+and Its Use in Actuarial Work","SOA","","","","pdf","Artificial Intelligence (AI)
+Actuarial Work
+Machine Learning
+Loss Reserving
+Underwriting
+Fraud Detection
+Claims
+Predictive Modeling
+Data Analytics
+Insurance","https://www.soa.org/globalassets/assets/files/resources/research-report/2019/ai-actuarial-work.pdf"
+"2020_02_14_dav_ergebnisbericht_anwendungen_ki_versicherungswirtschaft.md","2020-02-14_DAV-Ergebnisbericht_Anwendungen_KI_Versicherungswirtschaft","https://aktuar.de/content/PDF/Fachwissen/2020-02-14_DAV-Ergebnisbericht_Anwendungen_KI_Versicherungswirtschaft.pdf","ba57321da8ba0d062c83f027fdc4f1ae12eec386","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"2020_02_14_dav_ergebnisbericht_umgang_mit_daten_im_bereich_data_science.md","2020-02-14_DAV-Ergebnisbericht_Umgang_mit_Daten_im_Bereich_Data_Science","https://ec.europa.eu/newsroom/dae/document.cfm?doc_id=58477.","936e7b495423645ac126b4a27532f9136fc6781c","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202109_ai_ethics_and_regulation_in_insurance.md","202109 AI_ethics_and_regulation_in_insurance","https://www.eiopa.europa.eu/publications/artificial-intelligence-governance-principles-towards-ethical-and-trustworthy-artificial_en","4d15d74a9d4507ef1e463d4423f9aa7d92c1b615","1","57","TITLE_TOKEN_SIM","37","AI in insurance and insuring AI","Anat Lior (Harvard JOLT)  Insuring AI: The Role of Insurance in Artificial Intelligence Regulation","Conference Paper","","5/1/2024","PDF","insurance, AI risks, regulation, product innovation","https://jolt.law.harvard.edu/assets/articlepdfs/v35/2.-lior-insuring-ai.pdf"
+"202109_ai_ethics_and_regulation_in_insurance.md","202109 AI_ethics_and_regulation_in_insurance","https://www.eiopa.europa.eu/publications/artificial-intelligence-governance-principles-towards-ethical-and-trustworthy-artificial_en","4d15d74a9d4507ef1e463d4423f9aa7d92c1b615","2","55","TITLE_TOKEN_SIM","29","AI ethics and regulation in insurance: Actuaries uniquely positioned for success","CIA","","","9/21/2025","HTML","Artificial Intelligence (AI)
+Consumer Privacy Protection Act (CPPA)
+Bias
+Discrimination
+Actuaries
+Ethics
+Regulations
+Pricing Algorithms
+Fairness
+Insurance","https://www.cia-ica.ca/news/ai-ethics-and-regulation-in-insurance-actuaries-uniquely-positioned-for-success"
+"202208_avoid_unfair_bias_ai.md","202208 avoid-unfair-bias-ai","https://www.pwc.com/us/en/tech-effect/ai-analytics/artificial-intelligence.html.","98ccfd374c02fb85c7621abb454a33089dedd91b","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202304_124页_众安保险众安科技_aigcchatgpt保险行业应用白皮书.md","202304 124页-众安保险.众安科技-AIGC&ChatGPT保险行业应用白皮书","https://www.doc88.com/p-46716415770135.html","5b343bc74c576b270e059453b6b9c07390196a81","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202306_11页_何舒晨从chatgpt谈aigc在保险智能客服中的应用何舒晨p74_84.md","202306 11页 何舒晨《从ChatGPT谈AIGC在保险智能客服中的应用》（何舒晨）（P74-84）","https://www.163.com/dy/article/HVR1QJBC0519X1J2.html.","12a43cfb86cf8e61f7b844c68e1d6f2792561656","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202309_geneva_association_regulation_of_ai_in_insurance.md","202309- Geneva Association-Regulation of AI in insurance","https://www.genevaassociation.org/sites/default/files/2023-09/Regulation%20of%20AI%20in%20insurance.pdf","9c1e150d0ef603e3e78a814e3e66cbdd12731b19","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202311_sunlife_ai_sales.md","202311 13页 阳光保险《大模型技术在保险销售领域的应用研究》（杜新凯、吕超、刘彦、韩权杰、张晗、卢世成）（P124-136）",,"06731a4e7b47f602e0ed0ca9e1f45c2c8c45f2d3","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202312_Statement_of_Intent_for_IAA_Activities_on_AI.md","SoI_AI_IAA",,"0ef8ab5abec3bb5de7e843f312d1d7cc8a9289b3","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"2024_02_26_dav_ergebnisbericht_regulierung_und_validierung_von_ki_modellen.md","2024-02-26_DAV-Ergebnisbericht_Regulierung und Validierung von KI-Modellen","https://aktuar.de/content/PDF/Fachwissen/2024-02-26_DAV-Ergebnisbericht_Regulierung_und_Validierung_von_KI-Modellen.pdf","ed18a46ff62476cccad259cfce8e4f4704f97d56","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"2024_05_27_dav_ergebnisbericht_explainable_artificial_intelligence.md","2024-05-27_DAV-Ergebnisbericht_Explainable Artificial Intelligence","https://aktuar.de/content/PDF/Fachwissen/2024-05-27_DAV-Ergebnisbericht_Explainable_Artificial_Intelligence.pdf","7682ce2ccc5c70f819f564fe5cbf57ffe297027d","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202401_interpretable_ml_methods.md","202401 interpretable-ml-methods","https://www.ussc.gov/sites/default/files/pdf/research-and-publications/quick-facts/Health_Care_Fraud_FY22.pdf","8474a62c81f84077bb4f2cfd7592355305304272","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202401_what_should_an_actuary_know_about_artificial_intelligence.md","202401 What-should-an-actuary-know-about-Artificial-Intelligence","https://actuary.eu/wp-content/uploads/2024/01/What-should-an-actuary-know-about-Artificial-Intelligence.pdf","bf2ffd007999df33e8d9a0e1770d3adcebbe16c3","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202402_a_primer_on_generative_ai_for_actuaries.md","202402 A Primer on Generative AI for Actuaries","https://actuary.eu/wpcontent/uploads/2024/01/What-should-an-actuary-know-about-Artificial-Intelligence.pdf.","3afb77f7b1f1f6f603b113610dada0247dba5377","1","95","H1_EXACT","7","A Primer on Generative AI for Actuaries","SOA","","","2/24/2025","pdf","Generative AI
+Actuaries
+Large Language Models (LLMs)
+Productivity
+Document Summarization
+Model Documentation
+Data Analysis
+Scenario Analysis
+Automation
+Prompt Engineering","https://www.soa.org/496313/globalassets/assets/files/resources/research-report/2024/primer-generative-ai.pdf"
+"202402_federated_learning_insurance_companies.md","202402 federated-learning-insurance-companies","https://www.soa.org/4916b8/globalassets/assets/files/resources/research-report/2024/federated-learning-insurance-companies.pdf","7df00cb323cdf18ea97fbe12cf53c7badd1cb6a6","1","100","URL_MATCH","5","Federated Learning for Insurance
+Companies","SOA","","","2/24/2025","pdf","Federated Learning (FL)
+Privacy Preservation
+Insurance Companies
+Loss Modeling
+Underwriting
+Data Shortage
+Collaboration
+Horizontal Federated Learning (HFL)
+Vertical Federated Learning (VFL)
+Risk Management","https://www.soa.org/4916b8/globalassets/assets/files/resources/research-report/2024/federated-learning-insurance-companies.pdf"
+"202407_harnessing_ai_and_how_actuaries_can_use_it_to_thrive.md","202407 Harnessing AI and how actuaries can use it to thrive","https://www.seeingbeyondrisk.ca/2024/07/harnessing-ai-and-how-actuaries-can-use-it-to-thrive/","458a28939c25eb49ace3f6b9c2b78f2a94320d26","1","95","H1_EXACT","30","Harnessing AI and how actuaries can use it to thrive","CIA","","","7/24/2025","HTML","Machine Learning (ML)
+Training Programs
+AI-powered Tools
+Python
+Innovation
+Workshops
+Data Analysis
+Underwriting
+Customer Service
+Hackathons","https://www.cia-ica.ca/news/harnessing-ai-and-how-actuaries-can-use-it-to-thrive"
+"202408_ai_retirement_risks_essays_7_rappaport.md","202408 ai-retirement-risks-essays-7-rappaport","https://www.soa.org/resources/research-reports/2024/ai-retirement-risks-essays/","f598f9d14c219856c3cd981447cbf5d6038918cf","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202408_regulatory_framework_comparison_ai.md","202408 regulatory-framework-comparison-ai","https://aindex.stanford.edu/wp-content/uploads/2024/05/HAI_AI-Index-Report-2024.pdf","abba36f3d6d0cd3a44766d6df774a373a38c68c9","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202409_aaa_professionalism_paper_generative_ai.md","202409 AAA_professionalism-paper-generative-ai","https://actuary.org/wp-content/uploads/2024/10/professionalism-paper-generative-ai.pdf","ebeb5b086aa770cfeb2f7129cc3337f4645e1552","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202409_the_impact_of_ai_on_mortality_modeling_essays.md","202409-the impact of ai on mortality modeling -essays","https://www.soa.org/resources/research-reports/2024/ai-mortality-essay-collection/","e97a7c2fc4b6824ae52691561489c89e02504320","1","50","TITLE_TOKEN_SIM","11","The Impact of Artificial Intelligence on Mortality Modeling and Actuaries","SOA","","","9/24/2025","pdf","AI, mortality modeling, forecasting, nontraditional data sources, machine learning, data privacy, bias, interpretability, actuarial science, validation.","https://www.soa.org/4a5e82/globalassets/assets/files/resources/research-report/2024/impact-ai-mortality/2024-impact-ai-mort-essay-rajendran.pdf"
+"202410_大模型技术深度赋能保险行业白皮书2024.md","202410 大模型技术深度赋能保险行业白皮书（2024）","https://hulianhutongshequ.cn/upload/tank/report/2024/202412/1/4a8c841a80f34461a5ee2c6f0a980212.pdf","4313d71d329a0ee80a5b39bc4e225cd2f5cb1e73","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202411_revolutionizing_actuarial_work_with_generative_ai.md","202411 Revolutionizing_Actuarial_Work_with_Generative_AI","https://www.cia-ica.ca/news/revolutionizing-actuarial-work-with-generative-ai-a-glimpse-into-the-future/","070f62ae79c29a12719da5cd5ad6a0de3d08e058","1","55","TITLE_TOKEN_SIM","31","Revolutionizing Actuarial Work with Generative AI: A Glimpse into the Future","CIA","","","11/24/2025","HTML","Generative AI
+Large Language Models (LLMs)
+Text Generation
+Summarization
+Underwriting
+Tokenization
+Machine Learning
+Content Generation
+Scenario Analysis
+Model Validation","revolutionizing actuarial work with generative ai: a glimpse into the future - canadian institute of actuaries | institut canadien des actuaires"
+"202412_pensions_in_the_age_of_artificial_intelligence_online.md","202412 pensions-in-the-age-of-artificial-intelligence_online","https://rpc.cfainstitute.org/en/.","9ce5c75f998ca5d6d4e332db91342345dfdaca36","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"2025_03_11_dav_eb_ai_act_im_aktuariellen_kontext.md","2025-03-11_DAV_EB_AI_Act_im_aktuariellen_Kontext","https://aktuar.de/content/PDF/Fachwissen/2025-03-11_DAV_EB_AI_Act_im_aktuariellen_Kontext.pdf","e59f4ff7099237303db2042937a702cee87f5126","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"2025_03_11_dav_eb_bias_diskriminierung.md","2025-03-11_DAV_EB_Bias-Diskriminierung",,"9f6a97c3cd0510ed53bc564e58013182b99b269b","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202501_oper_genai_act_report_01_2025.md","202501 oper-genai-act-report-01-2025",,"4aa7cca0bd9c5db994fce05f68c4a3ae50cfb96d","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202502_machine_learning_in_actuarial_science_enhancing_predictive_models_for_insurance_risk_management.md","202502 Machine Learning in Actuarial Science Enhancing Predictive Models for Insurance Risk Management","https://www.researchgate.net/publication/389132064_Machine_Learning_in_Actuarial_Science_Enhancing_Predictive_Models_for_Insurance_Risk_Management","b636a42b7e439a250b57940867a6a54e1989c2b5","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202502_Public_Consultation_on_Draft_Application_Paper_on_the_Supervision_of_AI.md","IAA_Response_IAIS_Public_Cnsltn_Draft_Applic_Paper_AI_17Feb2025","https://www.iais.org/category/application-papers/","9f9feaf3f1a6c5b7367e1abeb8c0b6b893a23c58","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"20250201635v1_the_ai_agent_index.md","202502.01635v1 The AI Agent Index","https://aiagentindex.mit.edu/,","d6aeef7b5faf97b189dd0cf6593fb745850b8a6d","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202503_augmenting_actuarial_intelligence_defining_the_future_of_actuarial.md","202503 Augmenting Actuarial Intelligence Defining the Future of Actuarial","https://doi.org/10.14741/ijcet/v.15.2.1","268bf87a6dcd19aac24a18bd7536ff153b610667","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"20250303_ai_tools_for_actuaries.md","20250303 AI Tools for Actuaries","https://actuary.eu/about-the-aae/continuous-professional-development/","bb199de5a9ef1f0ab65ffd9b61877c14fb597e82","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"20250324_aae_discussion_paper_navigating_europes_ai_act.md","20250324 AAE-Discussion-Paper-Navigating-Europes-AI-Act",,"7f7796b0fcdd158ce54904efbc2214cf5678b24a","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"20250324_soa_ai_bulletin.md","20250324-SOA-ai-bulletin","https://content.naic.org/article/naic-announces-2025-committee-leaders","d77ea227952e9ab676e66596c3d76c8e9e3c28ce","1","67","TITLE_TOKEN_SIM","1","2025-03-ai-bulletin","SOA","","","3/25/2025","pdf","
+Artificial Intelligence (AI)
+PD Edge+
+Learning Tracks
+Actuarial
+NAIC
+Insurance Industry
+Prompting
+Large Language Models (LLMs)
+Short-form Videos
+Data Science","https://www.soa.org/4934b1/globalassets/assets/files/resources/research-report/2025/2025-03-ai-bulletin.pdf"
+"202505_ai_bulletin.md","202505 AI bulletin","https://www.soa.org/resources/research-reports/2025/research-ai-bulletin/","fe92103c01629414e0138521799c6f29970e5f09","1","95","H1_EXACT","1","2025-03-ai-bulletin","SOA","","","3/25/2025","pdf","
+Artificial Intelligence (AI)
+PD Edge+
+Learning Tracks
+Actuarial
+NAIC
+Insurance Industry
+Prompting
+Large Language Models (LLMs)
+Short-form Videos
+Data Science","https://www.soa.org/4934b1/globalassets/assets/files/resources/research-report/2025/2025-03-ai-bulletin.pdf"
+"202505_Webinar_AI_Agents_Actuarial_Enablement.md","20250512_DAVF_Webinar_AI_Agents-_Actuarial_Enablement","https://www.trackingai.org/home*","77311f68340cea3236e8dbe09a7af0f643f3b1b6","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202506-ai-insurance-greater-china-report.md","202506-ai-insurance-greater-china-report","https://deepai.org/machine-learning-glossary-and-terms/narrow-ai","af7280f558c22fcc0acc0e6e965f533035df1942","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202507_ai_bulletin.md","202507 AI bulletin",,"a91dce390a8667cc9f2b0030aa53d5c767f2390c","1","95","H1_EXACT","1","2025-03-ai-bulletin","SOA","","","3/25/2025","pdf","
+Artificial Intelligence (AI)
+PD Edge+
+Learning Tracks
+Actuarial
+NAIC
+Insurance Industry
+Prompting
+Large Language Models (LLMs)
+Short-form Videos
+Data Science","https://www.soa.org/4934b1/globalassets/assets/files/resources/research-report/2025/2025-03-ai-bulletin.pdf"
+"202507_Artificial_Intelligence_Governance_Framework.md","AITF_Governance_Framework_ConsultationDraft_final",,"8e028130766432032ef70df8a15ffc43df2f342a","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202507_Documentation_of_Artificial_Intelligence_Models.md","AITF_Documentation_AIModels_ConsultationDraft",,"81b4d8c6048645470d9cd7a1604cd7409bd3b339","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202507_Testing_of_Artificial_Intelligence_Models.md","AITF_Testing_AI_Models_ConsultationDraft",,"957a38745c6824ac193658d3d95d3de82f77c6bd","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202507_Webinar_Machine_Learning_in_Reserving.md","20250714_Presentation_for_Webinar_on_MachineLearning","https://institute-and-faculty-of-actuaries.github.io/mlr-blog/post/research/icnn-2024-02-covering/","03d44d3f9cb517632bc5ca3350fe3f42b2b3b3ac","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202508_ai_retirement_essays_2nd_compiled_essay_collection.md","202508-ai-retirement-essays-2nd-compiled-essay-collection","https://www.statcan.gc.ca/o1/en/plus/4288-canadian-seniors-more-connected-ever","0b19c2c4e6468268f2179a3dde90d5d3ab84c01b","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202509_ai_bulletin.md","202509 AI bulletin","https://www.soa.org/4a580e/globalassets/assets/files/resources/research-report/2025/2025-09-ai-bulletin.pdf","8f4ee3c023853519d649c19f129a97fd09a9146f","1","95","H1_EXACT","1","2025-03-ai-bulletin","SOA","","","3/25/2025","pdf","
+Artificial Intelligence (AI)
+PD Edge+
+Learning Tracks
+Actuarial
+NAIC
+Insurance Industry
+Prompting
+Large Language Models (LLMs)
+Short-form Videos
+Data Science","https://www.soa.org/4934b1/globalassets/assets/files/resources/research-report/2025/2025-03-ai-bulletin.pdf"
+"202510_ai_actuarial_bias_equity_r2.md","202510 ai-actuarial-bias-equity-r2","https://www.ftc.gov/reports/big-data-tool-inclusion-or-exclusion-understanding-issues-ftc-report.","845f750cebf6ffbc1fbd40d13db55339825812d2","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202510_ait182_healthcare_ai_expert_panel_ai.md","202510-ait182-Healthcare AI expert-panel-ai","https://content.naic.org/sites/default/files/national_meeting/Materials-Big-Data-AI-WG032625_0.pdf","001d9e768fa3d31c7c3961606797d55d15f27c77","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202510_provider_use_ai_healthcare.md","202510-provider-use-ai-healthcare","https://news.harvard.edu/gazette/story/2025/05/ai-tool-predicts-relapse-risk-for-children-with-brain-cancer/","23d04ed90c9bb5141e5207a425789b1d35939902","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202511_ai_bulletin.md","202511 AI bulletin","https://open.spotify.com/episode/7wrMteQN1T2DJgqDzOwoq5?si=7dc71a2bb5574954","ef0538d40154f14cf7967d9fe8cc6cf083f8befd","1","95","H1_EXACT","1","2025-03-ai-bulletin","SOA","","","3/25/2025","pdf","
+Artificial Intelligence (AI)
+PD Edge+
+Learning Tracks
+Actuarial
+NAIC
+Insurance Industry
+Prompting
+Large Language Models (LLMs)
+Short-form Videos
+Data Science","https://www.soa.org/4934b1/globalassets/assets/files/resources/research-report/2025/2025-03-ai-bulletin.pdf"
+"202511_Artificial_Intelligence_Governance_Comparing_AI_Regulatory_Guidance_Among_Countries.md","AITF2024_G1_Comparison_Chart_Supporting_Document_DRAFT",,"347c4b2c331fbec187924c4bff5516ac7084f3ed","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"202511-ait-172-ai-quarter-survey-report.md","202511-ait-172-ai-quarter-survey-report",,"b195fdd22700b9504762b3b119ed8696dce2b742","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"A_Practical_Guide_to_Navigating_Fairness_in_Insurance_Pricing.md","A_Practical_Guide_to_Navigating_Fairness_in_Insurance_Pricing",,"34fbaa33375768af06af9fa7734aa3ddb076e043","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"b9_chris_dolman_paper.md","B9_Chris Dolman (paper)",,"75a2f72835c9b279f14c678fb2985c1999dccb91","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"Balancing_Risk_Assessment_and_Social_Fairness_an_Auto_Telematics_Case_Study.md","Balancing_Risk_Assessment_and_Social_Fairness_an_Auto_Telematics_Case_Study","https://emiliano-valdez.scholar.uconn.edu/data/.","f3645e23ec471a2a9ff9ae03c9e04bd81af51d71","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"cas_monograph_02_bahnemann.md","CAS_Monograph_02-Bahnemann",,"e6267dca1a7148ec277fb19af53db67fc939bb48","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"cas_monograph_02_errata_bahnemann.md","CAS_Monograph_02_Errata-Bahnemann",,"fdb1903fdf7090d951ba785f385bd68240fdcdcc","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"cas_monograph_03_taylor.md","CAS_Monograph_03-Taylor",,"9e11d9fca0e10f3312446e844657e7aadd170c20","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"cas_monograph_03_taylor_errata.md","CAS_Monograph_03-Taylor-Errata",,"0aa6b1575330d1423cc4d00ec9624fb39095bb3e","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"cas_monograph_04_errata.md","CAS_Monograph_04 Errata",,"cb38f2228947b3afa5dcbd907541e0acd9c28d0b","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"cas_monograph_04_shapland.md","CAS_Monograph_04-shapland","https://www.casact.org/sites/default/","17b6aba5056bbf4fe4d672d56bad86004da7cc73","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"cas_monograph_05_goldburd_khare_tevet.md","CAS_Monograph_05-Goldburd-Khare-Tevet",,"d7cb79d891b6357d5f7fd0576ad7930cfee8d3f7","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"cas_monograph_06_kunce_chatterjee.md","CAS_Monograph_06-Kunce-Chatterjee","http://www.tdi.texas.gov/reports/report4.html.","3fcd26d4dcf21bc99142552702194bb20b44a001","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"cas_monograph_08_meyers.md","CAS_Monograph_08-Meyers","http://mc-stan.org","13bc39fc7bd8f8b5761e2aedf104cc30ab56ead9","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"cas_monograph_09_hall_jones_madigan_zheng_0.md","CAS_Monograph_09-hall-jones-madigan-zheng_0",,"283c9553b75a003db774a094020f41a44b6a30be","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"cas_monograph_10_shapland.md","CAS_Monograph_10-Shapland","https://www.casact.org/sites/default/files/2022-03/","1184b9dfee14b2d18a01efc26a119f83cf3cd0c1","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"CAS_Monograph_No_13.md","CAS_Monograph_No_13",,"7e225ed1a53d8fa7225922c9457a4ec9b627b7c5","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"cs1_case_study_french_motor_third_party_liability_claims.md","CS1 Case Study French Motor Third-Party Liability Claims","https://www.actuarialdatascience.org/","c5e56c0396dfd6d3d8283e941e689f38684f20dc","1","89","TITLE_TOKEN_SIM","43","Case Study: French Motor Third-Party Liability Claims","Swiss Association of Actuaries ","AI in actuarial Science","","3/3/2020","pdf","data science, machine learning, predictive modeling, claim frequency, motor insurance, regression trees, boosting machine, neural network, generalized linear models, feature engineering, covariate selection.","https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3164764"
+"cs10_localglmnet_a_deep_learning_architecture_for_actuaries.md","CS10 LocalGLMnet a deep learning architecture for actuaries","https://www.actuarialdatascience.org","cefa6c498721bd82ea18eff43b701b9a56dd0893","1","88","TITLE_TOKEN_SIM","52","LocalGLMnet: a deep learning architecture for actuaries","Swiss Association of Actuaries ","AI in actuarial Science","","8/4/2021","pdf","LocalGLMnet, neural network, deep learning, variable selection, interactions, explainable artificial intelligence, XAI, generalized linear model, GLM, tabular data, variable importance, Shapley additive explanation, natural language processing, NLP, text recognition, recurrent neural network, long short-term memory cell, LSTM","https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3900350"
+"cs11_model_comparison_and_calibration.md","CS11 Model Comparison and Calibration","https://www.actuarialdatascience.org","1dcdffd9c0c6e0f3a84d04477e4fd7ed015005fb","1","67","TITLE_TOKEN_SIM","53","Model Comparison and Calibration Assessment","Swiss Association of Actuaries ","AI in actuarial Science","","7/27/2023","pdf","actuarial science, backtesting, calibration, classification, consistency, data science, identification functions, machine learning, model comparison, predictive performance, propriety, scoring functions, scoring rules, supervised learning","https://arxiv.org/abs/2202.12780"
+"cs12_actuarial_applications_of_natural_language_processing.md","CS12 Actuarial applications of natural language processing","https://www.actuarialdatascience.org/.","e80862c9713eb38078b4ba70f99b5ee5a2e61aad","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"cs13_gini_index_and_friends.md","CS13 Gini Index and Friends","https://www.actuarialdatascience.org","f5d926cd86436e5824cd5b55873f79f94ea3fd61","1","80","TITLE_TOKEN_SIM","55","Gini Index and Friends","Swiss Association of Actuaries ","AI in actuarial Science","","10/14/2022","pdf","Gini index, Gini score, Gini coefficient, accuracy ratio, consistency, consistent scoring, auto-calibration, Lorenz curve, concentration curve, cumulative accuracy profile, CAP, receiver operating characteristics curve, ROC curve, area under the curve, AUC, model selection, binary classification, regression model.","https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4248143"
+"cs14_shap_for_actuaries_explain_any_model.md","CS14 SHAP for Actuaries Explain any Model","https://www.actuarialdatascience.org","136c275c8859e89dd60f57295bae61ed724ea3ae","1","86","TITLE_TOKEN_SIM","56","SHAP for Actuaries: Explain any Model","Swiss Association of Actuaries ","AI in actuarial Science","","3/15/2023","pdf","XAI, explainability, machine learning, SHAP, Shapley values, regression mod","https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4389797"
+"cs15_privacy_preserving_machine_learning.md","CS15 Privacy Preserving Machine Learning","https://www.actuarialdatascience.org","953e76db4430f0c8fd99a1c60ac7f7b1c6859d81","1","80","TITLE_TOKEN_SIM","57","Privacy Preserving Machine Learning","Swiss Association of Actuaries ","AI in actuarial Science","","9/30/2023","pdf","Life & health, sensitive personal data, cryptography, security, multiparty homomorphic encryption, logistic regression, Cox proportional hazards model, neural network, hazard ratio, relative risk, odds ratio, federated machine learning","https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4595287"
+"cs2_insights_from_inside_neural_networks.md","CS2 Insights from Inside Neural Networks","https://www.actuarialdatascience.org","b278a98c8df686a5a134e9ec3600b5c70cdfc6c4","1","83","TITLE_TOKEN_SIM","44","Insights from Inside Neural Networks","Swiss Association of Actuaries ","AI in actuarial Science","","4/23/2020","pdf","neural networks, architecture, over-fitting, loss function, dropout, regularization, LASSO, ridge, gradient descent, class imbalance, bias regularization, balance property, car insurance, claim frequency, Poisson regression model, machine learning, deep learning.","https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3226852"
+"cs3_nesting_classical_actuarial_models_into_neural_networks.md","CS3 Nesting Classical Actuarial Models into Neural Networks","https://www.actuarialdatascience.org","f289c6137faf6064f05509083fdaaad23f9342b6","1","88","TITLE_TOKEN_SIM","45","Nesting Classical Actuarial Models into Neural Networks","Swiss Association of Actuaries ","AI in actuarial Science","","1/22/2019","pdf","Neural networks, architecture, car insurance, generalized linear models, embedding, nesting, embedding layers, one-hot encoding, dummy coding, representation learning, claims frequency, Poisson regression model, machine learning, deep learning.","https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3320525"
+"cs4_on_boosting_theory_and_applications.md","CS4 On Boosting Theory and Applications","https://www.actuarialdatascience.org/","4b7ec2381012a0d07e78a55f8d77bc44544f5852","1","83","TITLE_TOKEN_SIM","46","On Boosting: Theory and Applications","Swiss Association of Actuaries ","AI in actuarial Science","","6/11/2019","pdf","machine learning, boosting, predictive modeling, R, Python, car insurance, Kaggle, Porto Seguro, AdaBoost, XGBoost.","https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3402687"
+"cs5_unsupervised_learning_what_is_a_sports_car.md","CS5 Unsupervised Learning What is a Sports Car","https://www.actuarialdatascience.org","cef0d8e983a4cf4ebafa9a810adfe01903ece824","1","88","TITLE_TOKEN_SIM","47","Unsupervised Learning: What is a Sports Car?","Swiss Association of Actuaries ","AI in actuarial Science","","10/9/2019","pdf","principal components analysis (PCA), biplot, autoencoder, bottleneck neural network (BNN), minimal spanning tree (MST), K-means clustering, K-medoids clustering, partitioning around medoids (PAM) algorithm, expectation-maximization (EM) algorithm, clustering with Gaussian mixture models (GMMs), variational autoencoder (VAE), t-distributed stochastic neighbor embedding (t-SNE), model-based clustering, uniform manifold approximation and projection (UMAP), self-organizing maps (SOM), Kohonen map, multi-dimensional scaling (MDS).","https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3439358"
+"cs6_lee_and_carter_go_machine_learning_recurrent_neural_networks.md","CS6 Lee and Carter go Machine Learning Recurrent Neural Networks","https://www.actuarialdatascience.org","4300397dd8d0b0505205ea5afaf21a20f18fe3c7","1","90","TITLE_TOKEN_SIM","48","Lee and Carter go Machine Learning: Recurrent Neural Networks","Swiss Association of Actuaries ","AI in actuarial Science","","8/22/2019","pdf","Recurrent neural network (RNN), long short-term memory (LSTM), gated recurrent unit (GRU), Lee–Carter (LC) model, mortality forecasting, feed-forward neural network (FNN)","https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3441030"
+"cs7_the_art_of_natural_language_processing_classical_modern_and.md","CS7 The Art of Natural Language Processing Classical, Modern and","https://www.actuarialdatascience.org/","c6bec7c87daa9599e9e7bef59b9e4b80d0b622bd","1","56","TITLE_TOKEN_SIM","49","The Art of Natural Language Processing: Classical, Modern and Contemporary Approaches to Text Document Classification","Swiss Association of Actuaries ","AI in actuarial Science","","3/1/2020","pdf","natural language processing, bag-of-words models, word embeddings, machine learning, recurrent neural networks, deep learning, Python, Tensorflow 2.0, Keras.","https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3547887"
+"cs8_peeking_into_the_black_box.md","CS8 Peeking into the Black Box","https://www.actuarialdatascience.org","3ef71f02dc1ceb10a7f99c6f2503d0ffeea1698a","1","83","TITLE_TOKEN_SIM","50","Peeking into the Black Box","Swiss Association of Actuaries ","AI in actuarial Science","","5/7/2020","pdf","XAI, machine learning, explainability, interpretability, black box models, model-agnostic technique, flashlight, motor insurance, claims frequency.","https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3595944"
+"cs9_convolutional_neural_network_case_studies.md","CS9 Convolutional neural network case studies","https://www.actuarialdatascience.org","a8fca9e6a8f662a75586e7c26250e126975e80fe","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"pbr_data_valuation_manual_future_edition.md","pbr_data_valuation_manual_future_edition","http://www.naic.org//prod-serv-home.htm","895cc1a92d6782b21280b4e6d38f3ea58e9c5f0e","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"potential_unintended_impacts_of_bias_mitigation_in_a_competitve_insurance_market_wang_chen_1.md","Potential-Unintended-Impacts-of-Bias-Mitigation-in-a-Competitve-Insurance-Market-Wang-Chen (1)","https://www.pinnacleactuaries.com/article/cas-research-paper-potential-unintended-impacts-bias-mitigation-competitive-insurance","99fa5e60c8d6ca4c6bbd68898c657f69a7378047","1","0","NO_CANDIDATE>=50","","","","","","","","",""
+"regulatory_framework_comparison_ai.md","regulatory-framework-comparison-ai","https://aindex.stanford.edu/wp-content/uploads/2024/05/HAI_AI-Index-Report-2024.pdf","a4c13b53aec3d6b9e1269dc1d2982756d063b7d3","1","0","NO_CANDIDATE>=50","","","","","","","","",""
