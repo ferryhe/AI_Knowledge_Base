@@ -28,7 +28,15 @@ DEFAULT_INDEX = Path(os.getenv("INDEX_PATH", PROJECT_ROOT / "knowledge_base.fais
 DEFAULT_META = Path(os.getenv("META_PATH", PROJECT_ROOT / "knowledge_base.meta.pkl"))
 EMBED_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-large")
 
-enc = tiktoken.get_encoding("cl100k_base")
+# Lazy-load tiktoken encoder to avoid network calls during import
+_enc = None
+
+def get_encoder():
+    """Get tiktoken encoder, loading it lazily."""
+    global _enc
+    if _enc is None:
+        _enc = tiktoken.get_encoding("cl100k_base")
+    return _enc
 
 
 def iter_markdown_files(source: Path) -> Iterable[Path]:
@@ -54,6 +62,7 @@ def chunk_text(text: str, max_tokens: int = 500, overlap: int = 80) -> Iterable[
       context preservation and retrieval granularity
     - Overlap helps maintain semantic continuity across chunk boundaries
     """
+    enc = get_encoder()
     tokens = enc.encode(text)
     if not tokens:
         return []

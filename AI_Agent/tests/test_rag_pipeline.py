@@ -67,7 +67,7 @@ class TestChunking:
     
     def test_chunk_normal_text(self, monkeypatch):
         """Chunking should handle normal text."""
-        # Mock tiktoken to avoid network calls
+        # Mock tiktoken encoder function
         class MockEncoder:
             def encode(self, text):
                 # Simple word-based tokenization
@@ -76,7 +76,7 @@ class TestChunking:
             def decode(self, tokens):
                 return " ".join(tokens)
         
-        monkeypatch.setattr(build_index_module, "enc", MockEncoder())
+        monkeypatch.setattr(build_index_module, "get_encoder", lambda: MockEncoder())
         
         text = " ".join([f"word{i}" for i in range(100)])
         chunks = list(build_index_module.chunk_text(text, max_tokens=20, overlap=5))
@@ -94,7 +94,7 @@ class TestChunking:
             def decode(self, tokens):
                 return ""
         
-        monkeypatch.setattr(build_index_module, "enc", MockEncoder())
+        monkeypatch.setattr(build_index_module, "get_encoder", lambda: MockEncoder())
         
         chunks = list(build_index_module.chunk_text("", max_tokens=500))
         assert chunks == []
@@ -108,7 +108,7 @@ class TestChunking:
             def decode(self, tokens):
                 return " ".join(tokens)
         
-        monkeypatch.setattr(build_index_module, "enc", MockEncoder())
+        monkeypatch.setattr(build_index_module, "get_encoder", lambda: MockEncoder())
         
         text = "Short text here"
         chunks = list(build_index_module.chunk_text(text, max_tokens=500))
@@ -120,6 +120,15 @@ class TestBuildIndex:
     
     def test_build_with_valid_files(self, tmp_path, monkeypatch):
         """Building index with valid files should succeed."""
+        # Mock tiktoken encoder
+        class MockEncoder:
+            def encode(self, text):
+                return text.split()
+            def decode(self, tokens):
+                return " ".join(tokens)
+        
+        monkeypatch.setattr(build_index_module, "get_encoder", lambda: MockEncoder())
+        
         repo_root = tmp_path / "repo"
         corpus_dir = repo_root / "Knowledge_Base_MarkDown"
         corpus_dir.mkdir(parents=True)
@@ -133,6 +142,7 @@ class TestBuildIndex:
         index_path.parent.mkdir(parents=True)
         
         monkeypatch.setattr(build_index_module, "REPO_ROOT", repo_root)
+        monkeypatch.setenv("OPENAI_API_KEY", "sk-test-key")  # Mock API key
         monkeypatch.setattr(
             build_index_module,
             "embed_batches",
@@ -154,6 +164,15 @@ class TestBuildIndex:
     
     def test_build_skips_empty_files(self, tmp_path, monkeypatch, capsys):
         """Empty files should be skipped with warning."""
+        # Mock tiktoken encoder
+        class MockEncoder:
+            def encode(self, text):
+                return text.split()
+            def decode(self, tokens):
+                return " ".join(tokens)
+        
+        monkeypatch.setattr(build_index_module, "get_encoder", lambda: MockEncoder())
+        
         repo_root = tmp_path / "repo"
         corpus_dir = repo_root / "Knowledge_Base_MarkDown"
         corpus_dir.mkdir(parents=True)
@@ -168,6 +187,7 @@ class TestBuildIndex:
         index_path.parent.mkdir(parents=True)
         
         monkeypatch.setattr(build_index_module, "REPO_ROOT", repo_root)
+        monkeypatch.setenv("OPENAI_API_KEY", "sk-test-key")  # Mock API key
         monkeypatch.setattr(
             build_index_module,
             "embed_batches",
@@ -194,6 +214,15 @@ class TestRetrieval:
     
     def test_retrieve_with_results(self, tmp_path, monkeypatch):
         """Retrieval should return relevant documents."""
+        # Mock tiktoken encoder
+        class MockEncoder:
+            def encode(self, text):
+                return text.split()
+            def decode(self, tokens):
+                return " ".join(tokens)
+        
+        monkeypatch.setattr(build_index_module, "get_encoder", lambda: MockEncoder())
+        
         repo_root = tmp_path / "repo"
         corpus_dir = repo_root / "Knowledge_Base_MarkDown"
         corpus_dir.mkdir(parents=True)
@@ -208,6 +237,7 @@ class TestRetrieval:
         
         monkeypatch.setattr(build_index_module, "REPO_ROOT", repo_root)
         monkeypatch.setattr(ask_module, "REPO_ROOT", repo_root)
+        monkeypatch.setenv("OPENAI_API_KEY", "sk-test-key")  # Mock API key
         monkeypatch.setattr(
             build_index_module,
             "embed_batches",
@@ -246,6 +276,15 @@ class TestRetrieval:
     
     def test_retrieve_with_similarity_threshold(self, tmp_path, monkeypatch):
         """Similarity threshold should filter low-quality results."""
+        # Mock tiktoken encoder
+        class MockEncoder:
+            def encode(self, text):
+                return text.split()
+            def decode(self, tokens):
+                return " ".join(tokens)
+        
+        monkeypatch.setattr(build_index_module, "get_encoder", lambda: MockEncoder())
+        
         repo_root = tmp_path / "repo"
         corpus_dir = repo_root / "Knowledge_Base_MarkDown"
         corpus_dir.mkdir(parents=True)
@@ -260,6 +299,7 @@ class TestRetrieval:
         
         monkeypatch.setattr(build_index_module, "REPO_ROOT", repo_root)
         monkeypatch.setattr(ask_module, "REPO_ROOT", repo_root)
+        monkeypatch.setenv("OPENAI_API_KEY", "sk-test-key")  # Mock API key
         monkeypatch.setattr(
             build_index_module,
             "embed_batches",
@@ -303,6 +343,15 @@ class TestNoMatchResponse:
     
     def test_empty_results_handling(self, tmp_path, monkeypatch):
         """System should handle gracefully when no documents match."""
+        # Mock tiktoken encoder
+        class MockEncoder:
+            def encode(self, text):
+                return text.split()
+            def decode(self, tokens):
+                return " ".join(tokens)
+        
+        monkeypatch.setattr(build_index_module, "get_encoder", lambda: MockEncoder())
+        
         repo_root = tmp_path / "repo"
         corpus_dir = repo_root / "Knowledge_Base_MarkDown"
         corpus_dir.mkdir(parents=True)
@@ -317,6 +366,7 @@ class TestNoMatchResponse:
         
         monkeypatch.setattr(build_index_module, "REPO_ROOT", repo_root)
         monkeypatch.setattr(ask_module, "REPO_ROOT", repo_root)
+        monkeypatch.setenv("OPENAI_API_KEY", "sk-test-key")  # Mock API key
         monkeypatch.setattr(
             build_index_module,
             "embed_batches",
