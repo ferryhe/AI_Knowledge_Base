@@ -28,6 +28,7 @@ AI materials live under `Knowledge_Base_MarkDown/`, each with a Markdown source 
 
 ## Querying with the Agent
 - Quick-start instructions, environment variables, and troubleshooting live in `AI_Agent/README.md`.
+- **NEW**: See `AI_Agent/IMPROVEMENTS.md` for detailed documentation of RAG improvements.
 - For a fast CLI query on Windows PowerShell:
   ```powershell
   cd AI_Agent

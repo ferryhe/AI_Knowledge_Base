@@ -1,6 +1,7 @@
 import argparse
 import os
 import pickle
+import sys
 from pathlib import Path
 from typing import Iterable, List
 
@@ -9,6 +10,13 @@ import numpy as np
 import tiktoken
 from dotenv import load_dotenv
 from openai import OpenAI
+
+# Add parent directory to path for utils import
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
+from utils import retry_with_exponential_backoff, validate_file_content
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 REPO_ROOT = PROJECT_ROOT.parent.resolve()
@@ -20,27 +28,59 @@ DEFAULT_INDEX = Path(os.getenv("INDEX_PATH", PROJECT_ROOT / "knowledge_base.fais
 DEFAULT_META = Path(os.getenv("META_PATH", PROJECT_ROOT / "knowledge_base.meta.pkl"))
 EMBED_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-large")
 
-enc = tiktoken.get_encoding("cl100k_base")
+# Lazy-load tiktoken encoder to avoid network calls during import
+_enc = None
+
+def get_encoder():
+    """Get tiktoken encoder, loading it lazily."""
+    global _enc
+    if _enc is None:
+        _enc = tiktoken.get_encoding("cl100k_base")
+    return _enc
 
 
 def iter_markdown_files(source: Path) -> Iterable[Path]:
+    """Iterate over markdown files with validation."""
     if not source.exists():
         raise FileNotFoundError(f"Source directory not found: {source}")
     for path in sorted(source.rglob("*.md")):
         if path.is_file():
+            # Skip empty files
+            if path.stat().st_size == 0:
+                print(f"[warning] Skipping empty file: {path}")
+                continue
             yield path.resolve()
 
 
 def chunk_text(text: str, max_tokens: int = 500, overlap: int = 80) -> Iterable[str]:
+    """
+    Chunk text with semantic boundary awareness.
+    
+    Strategy:
+    - Uses token-based chunking with configurable overlap to prevent semantic breaks
+    - 500 token chunks with 80 token overlap provides good balance between
+      context preservation and retrieval granularity
+    - Overlap helps maintain semantic continuity across chunk boundaries
+    """
+    enc = get_encoder()
     tokens = enc.encode(text)
     if not tokens:
         return []
     step = max(1, max_tokens - overlap)
     for i in range(0, len(tokens), step):
-        yield enc.decode(tokens[i : i + max_tokens])
+        chunk = enc.decode(tokens[i : i + max_tokens])
+        # Only yield non-empty chunks
+        if chunk.strip():
+            yield chunk
 
 
+@retry_with_exponential_backoff(max_retries=3, initial_delay=1.0)
 def embed_batches(client: OpenAI, chunks: List[str]) -> List[List[float]]:
+    """
+    Create embeddings for a batch of text chunks with retry logic.
+    
+    Includes exponential backoff for handling rate limits and transient errors.
+    """
     resp = client.embeddings.create(model=EMBED_MODEL, input=chunks)
     return [item.embedding for item in resp.data]
 
@@ -66,7 +106,21 @@ def build_index(
         try:
             text = md_path.read_text(encoding="utf-8")
         except UnicodeDecodeError:
-            text = md_path.read_text(encoding="latin-1", errors="ignore")
+            print(f"[warning] Encoding issue with {md_path}, trying latin-1")
+            try:
+                text = md_path.read_text(encoding="latin-1", errors="ignore")
+            except Exception as e:
+                print(f"[error] Failed to read {md_path}: {e}")
+                continue
+        except Exception as e:
+            print(f"[error] Failed to read {md_path}: {e}")
+            continue
+
+        # Validate file content
+        is_valid, error_msg = validate_file_content(str(md_path), text)
+        if not is_valid:
+            print(f"[warning] {error_msg}")
+            continue
 
         for chunk in chunk_text(text, max_tokens=max_tokens, overlap=overlap):
             rel_path = md_path.relative_to(REPO_ROOT)

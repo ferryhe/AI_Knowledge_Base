@@ -6,3 +6,13 @@ AI_Agent/*.meta.pkl
 AI_Agent/*.pkl
 __pycache__/
 *.pyc
+
+# Test artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+
+# Docker volumes
+AI_Agent/caddy_data/
+AI_Agent/caddy_config/
