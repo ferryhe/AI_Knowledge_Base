@@ -19,6 +19,15 @@ def _vectorize(text: str) -> list[float]:
 
 
 def test_build_and_retrieve(tmp_path, monkeypatch):
+    # Mock tiktoken encoder
+    class MockEncoder:
+        def encode(self, text):
+            return text.split()
+        def decode(self, tokens):
+            return " ".join(tokens)
+    
+    monkeypatch.setattr(build_index_module, "get_encoder", lambda: MockEncoder())
+    
     repo_root = tmp_path / "repo"
     corpus_dir = repo_root / "Knowledge_Base_MarkDown"
     corpus_dir.mkdir(parents=True)
@@ -32,6 +41,7 @@ def test_build_and_retrieve(tmp_path, monkeypatch):
 
     monkeypatch.setattr(build_index_module, "REPO_ROOT", repo_root, raising=False)
     monkeypatch.setattr(ask_module, "REPO_ROOT", repo_root, raising=False)
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-test-key")  # Mock API key
     monkeypatch.setattr(
         build_index_module,
         "embed_batches",
@@ -60,6 +70,9 @@ def test_build_and_retrieve(tmp_path, monkeypatch):
             return SimpleNamespace(data=data)
 
     dummy_client = SimpleNamespace(embeddings=DummyEmbeddings())
+    
+    # Patch the _create_embedding function
+    monkeypatch.setattr(ask_module, "_create_embedding", lambda client, text: _vectorize(text))
 
     hits = ask_module.retrieve(dummy_client, doc_text, k=1)
     assert hits, "Expected at least one retrieved chunk"
