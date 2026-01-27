@@ -10,6 +10,13 @@ import numpy as np
 from dotenv import load_dotenv
 from openai import OpenAI
 
+# Add parent directory to path for utils import
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
+from utils import retry_with_exponential_backoff
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 REPO_ROOT = PROJECT_ROOT.parent
 
@@ -38,10 +45,14 @@ def _normalize_path(path: str) -> str:
 
 SYSTEM_PROMPT = (
     "You are the documentation expert for the IAA AI Knowledge Base. "
-    "Every response must stay within the retrieved snippets and cite evidence using the snippet number plus file path "
-    "in the format `[n] path/to/file.md`. Structure answers with a short summary followed by bullet points of "
-    "supporting evidence. If the snippets do not contain the answer, reply 'Not sure' and recommend the most relevant "
-    "Markdown file to inspect."
+    "CRITICAL INSTRUCTIONS:\n"
+    "1. Answer ONLY using information from the retrieved snippets provided below.\n"
+    "2. Every claim must cite evidence using the snippet number and file path in the format `[n] path/to/file.md`.\n"
+    "3. Structure answers with a short summary followed by bullet points of supporting evidence.\n"
+    "4. If the snippets do not contain sufficient information to answer the question, you MUST reply 'I don't have enough information to answer this question.' "
+    "and recommend the most relevant Markdown file to inspect.\n"
+    "5. NEVER make up information or draw conclusions not directly supported by the snippets.\n"
+    "6. If you're uncertain about any detail, explicitly state your uncertainty."
 )
 
 
@@ -101,15 +112,54 @@ def get_document_snippets(doc_path: str, limit: int | None = None):
     return matches
 
 
-def retrieve(client: OpenAI, question: str, k: int = 8):
+@retry_with_exponential_backoff(max_retries=3, initial_delay=1.0)
+def _create_embedding(client: OpenAI, text: str) -> list[float]:
+    """Create embedding with retry logic."""
+    return client.embeddings.create(model=EMB_MODEL, input=[text]).data[0].embedding
+
+
+@retry_with_exponential_backoff(max_retries=3, initial_delay=2.0)
+def _create_chat_completion(client: OpenAI, messages: list[dict], temperature: float = 0.2) -> str:
+    """Create chat completion with retry logic."""
+    response = client.chat.completions.create(
+        model=MODEL,
+        messages=messages,
+        temperature=temperature
+    )
+    return response.choices[0].message.content
+
+
+def retrieve(client: OpenAI, question: str, k: int = 8, similarity_threshold: float = 0.0):
+    """
+    Retrieve relevant document chunks using vector similarity search.
+    
+    Args:
+        client: OpenAI client instance
+        question: User's query
+        k: Number of top results to return (default 8)
+        similarity_threshold: Minimum cosine similarity score (0.0-1.0).
+                            Default 0.0 returns all k results.
+                            Recommended: 0.3-0.5 for stricter filtering.
+    
+    Returns:
+        List of document chunks with metadata, filtered by similarity threshold
+    """
     index, docs = _load_artifacts()
 
-    query_vec = client.embeddings.create(model=EMB_MODEL, input=[question]).data[0].embedding
+    query_vec = _create_embedding(client, question)
     query_array = np.array([query_vec], dtype="float32")
     faiss.normalize_L2(query_array)
 
+    # FAISS IndexFlatIP returns cosine similarity scores (higher is better)
     distances, indices = index.search(query_array, k)
-    return [docs[i] for i in indices[0] if 0 <= i < len(docs)]
+    
+    # Filter by similarity threshold
+    results = []
+    for score, i in zip(distances[0], indices[0]):
+        if 0 <= i < len(docs) and score >= similarity_threshold:
+            results.append(docs[i])
+    
+    return results
 
 
 def main():
@@ -119,15 +169,32 @@ def main():
 
     question = sys.argv[1]
     client = OpenAI()
-    hits = retrieve(client, question)
+    
+    try:
+        hits = retrieve(client, question)
+        
+        # Check if we got any results
+        if not hits:
+            print("I don't have enough information to answer this question.")
+            print("The knowledge base doesn't contain relevant documents for this query.")
+            sys.exit(0)
 
-    context = "\n\n".join(f"[{i+1}] {hit['path']}\n{hit['text']}" for i, hit in enumerate(hits))
-    messages = [
-        {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": format_user_prompt(question, context)},
-    ]
-    response = client.chat.completions.create(model=MODEL, messages=messages, temperature=0.2)
-    print(response.choices[0].message.content)
+        context = "\n\n".join(f"[{i+1}] {hit['path']}\n{hit['text']}" for i, hit in enumerate(hits))
+        messages = [
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": format_user_prompt(question, context)},
+        ]
+        
+        answer = _create_chat_completion(client, messages)
+        print(answer)
+        
+    except FileNotFoundError as e:
+        print(f"Error: {e}")
+        print("Please run 'make index' or 'python scripts/build_index.py' first.")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Error: {e}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":

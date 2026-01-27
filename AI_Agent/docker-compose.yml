@@ -1,0 +1,87 @@
+version: '3.8'
+
+services:
+  # RAG Application Service
+  rag-app:
+    build:
+      context: ..
+      dockerfile: AI_Agent/Dockerfile
+    container_name: ai-knowledge-base
+    restart: unless-stopped
+    
+    # Environment variables - DO NOT hardcode secrets here
+    # Use .env file or docker secrets in production
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - MODEL=${MODEL:-gpt-4o}
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-text-embedding-3-large}
+      - INDEX_PATH=/app/data/knowledge_base.faiss
+      - META_PATH=/app/data/knowledge_base.meta.pkl
+    
+    # Mount pre-built vector store files
+    # Build these first with: python scripts/build_index.py
+    volumes:
+      - ./knowledge_base.faiss:/app/data/knowledge_base.faiss:ro
+      - ./knowledge_base.meta.pkl:/app/data/knowledge_base.meta.pkl:ro
+      # Optional: Mount source code for development
+      # - ./scripts:/app/scripts
+    
+    ports:
+      - "${STREAMLIT_PORT:-8501}:8501"
+    
+    # Resource limits (adjust based on your needs)
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '1.0'
+          memory: 1G
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+    networks:
+      - rag-network
+
+  # Optional: Reverse proxy with Caddy
+  caddy:
+    image: caddy:2-alpine
+    container_name: ai-kb-caddy
+    restart: unless-stopped
+    
+    ports:
+      - "80:80"
+      - "443:443"
+    
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    
+    networks:
+      - rag-network
+    
+    depends_on:
+      - rag-app
+
+networks:
+  rag-network:
+    driver: bridge
+
+volumes:
+  caddy_data:
+  caddy_config:
