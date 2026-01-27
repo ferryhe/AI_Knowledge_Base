@@ -1,12 +1,13 @@
 # Caddyfile - Reverse proxy configuration
-# Replace yourdomain.com with your actual domain
+# IMPORTANT: Replace "yourdomain.com" below with your actual domain name
 
 {
     # Global options
-    email admin@yourdomain.com  # For Let's Encrypt
+    email admin@yourdomain.com  # For Let's Encrypt - CHANGE THIS
 }
 
 # HTTP to HTTPS redirect
+# REPLACE yourdomain.com WITH YOUR ACTUAL DOMAIN
 yourdomain.com {
     # Automatic HTTPS with Let's Encrypt
     
@@ -34,9 +35,13 @@ yourdomain.com {
     }
     
     # Rate limiting (optional)
+    # NOTE: Standard Caddy 2 does not include built-in rate limiting.
+    # You need to install the caddy-ratelimit plugin or use a different method.
+    # See: https://github.com/mholt/caddy-ratelimit
+    # Example with plugin:
     # rate_limit {
-    #     zone rag_zone {
-    #         key {remote}
+    #     zone example {
+    #         key {remote_host}
     #         events 100
     #         window 1m
     #     }

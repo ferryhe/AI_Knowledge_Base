@@ -50,11 +50,13 @@ def retry_with_exponential_backoff(
                     print(f"[retry] Attempt {attempt + 1}/{max_retries} failed: {e}. Retrying in {wait_time:.2f}s...")
                     time.sleep(wait_time)
                 except Exception as e:
-                    # Don't retry on unexpected errors
-                    raise
+                    # Don't retry on unexpected errors - re-raise immediately
+                    raise e
             
             # All retries exhausted
-            raise last_exception or Exception("Max retries exceeded")
+            if last_exception:
+                raise last_exception
+            raise Exception(f"Max retries exceeded for {func.__name__}")
         
         return wrapper
     
@@ -102,7 +104,9 @@ async def retry_with_exponential_backoff_async(
         except Exception:
             raise
     
-    raise last_exception or Exception("Max retries exceeded")
+    if last_exception:
+        raise last_exception
+    raise Exception(f"Max retries exceeded for async call")
 
 
 def validate_file_content(file_path: str, content: str) -> tuple[bool, str]:
