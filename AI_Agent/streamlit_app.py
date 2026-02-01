@@ -101,9 +101,11 @@ def detect_system_language():
             lang = env_lang.split(".", 1)[0] if env_lang else None
         if lang and lang.startswith('zh'):
             return 'zh'
+        # Default to English if the locale is not Chinese
+        return 'en'
     except Exception:
-        pass
-    return 'en'
+        # If locale detection fails for any reason, fall back to English
+        return 'en'
 
 def get_text(key, **kwargs):
     """Get translated text for the current language"""
