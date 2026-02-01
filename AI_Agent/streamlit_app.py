@@ -97,13 +97,15 @@ def detect_system_language():
         lang = locale.getdefaultlocale()[0]
         if lang and lang.startswith('zh'):
             return 'zh'
-    except:
+    except Exception:
         pass
     return 'en'
 
 def get_text(key, **kwargs):
     """Get translated text for the current language"""
     lang = st.session_state.get('language', 'en')
+    # Validate language exists in TRANSLATIONS
+    lang = lang if lang in TRANSLATIONS else 'en'
     text = TRANSLATIONS[lang].get(key, TRANSLATIONS['en'][key])
     if kwargs:
         return text.format(**kwargs)

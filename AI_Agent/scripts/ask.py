@@ -79,7 +79,8 @@ def get_system_prompt(language: str = "en") -> str:
     
     return base_prompt
 
-# Keep the old constant for backward compatibility (defaults to English)
+# Deprecated: Use get_system_prompt(language) instead for language-specific responses
+# This constant is kept for backward compatibility but only supports English responses
 SYSTEM_PROMPT = get_system_prompt("en")
 
 
