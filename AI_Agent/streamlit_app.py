@@ -94,7 +94,11 @@ TRANSLATIONS = {
 def detect_system_language():
     """Detect system language and return 'en' or 'zh'"""
     try:
-        lang = locale.getdefaultlocale()[0]
+        lang = locale.getlocale()[0]
+        if not lang:
+            # Fallback to environment variables like LANG if locale is not set
+            env_lang = os.environ.get("LANG", "")
+            lang = env_lang.split(".", 1)[0] if env_lang else None
         if lang and lang.startswith('zh'):
             return 'zh'
     except Exception:
