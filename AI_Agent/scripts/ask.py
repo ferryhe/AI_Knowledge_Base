@@ -43,17 +43,44 @@ _DOCS_CACHE = None
 def _normalize_path(path: str) -> str:
     return path.replace("\\", "/").lower()
 
-SYSTEM_PROMPT = (
-    "You are the documentation expert for the IAA AI Knowledge Base. "
-    "CRITICAL INSTRUCTIONS:\n"
-    "1. Answer ONLY using information from the retrieved snippets provided below.\n"
-    "2. Every claim must cite evidence using the snippet number and file path in the format `[n] path/to/file.md`.\n"
-    "3. Structure answers with a short summary followed by bullet points of supporting evidence.\n"
-    "4. If the snippets do not contain sufficient information to answer the question, you MUST reply 'I don't have enough information to answer this question.' "
-    "and recommend the most relevant Markdown file to inspect.\n"
-    "5. NEVER make up information or draw conclusions not directly supported by the snippets.\n"
-    "6. If you're uncertain about any detail, explicitly state your uncertainty."
-)
+def get_system_prompt(language: str = "en") -> str:
+    """
+    Get the system prompt with language-specific instructions.
+    
+    Args:
+        language: Language code ('en' or 'zh') - determines the response language
+    
+    Returns:
+        System prompt with language instructions
+    """
+    base_prompt = (
+        "You are the documentation expert for the IAA AI Knowledge Base. "
+        "CRITICAL INSTRUCTIONS:\n"
+        "1. Answer ONLY using information from the retrieved snippets provided below.\n"
+        "2. Every claim must cite evidence using the snippet number and file path in the format `[n] path/to/file.md`.\n"
+        "3. Structure answers with a short summary followed by bullet points of supporting evidence.\n"
+        "4. If the snippets do not contain sufficient information to answer the question, you MUST reply 'I don't have enough information to answer this question.' "
+        "and recommend the most relevant Markdown file to inspect.\n"
+        "5. NEVER make up information or draw conclusions not directly supported by the snippets.\n"
+        "6. If you're uncertain about any detail, explicitly state your uncertainty.\n"
+    )
+    
+    if language == "zh":
+        base_prompt += (
+            "7. LANGUAGE INSTRUCTION: Respond in Chinese (中文). "
+            "Maintain the same professional tone and citation format, but use Chinese language for all explanations and summaries."
+        )
+    else:
+        base_prompt += (
+            "7. LANGUAGE INSTRUCTION: Respond in English. "
+            "Maintain the same professional tone and citation format, and always use English for all explanations and summaries, even if the user's question is in another language."
+        )
+    
+    return base_prompt
+
+# Deprecated: Use get_system_prompt(language) instead for language-specific responses
+# This constant is kept for backward compatibility but only supports English responses
+SYSTEM_PROMPT = get_system_prompt("en")
 
 
 def format_user_prompt(question: str, context: str, history: str | None = None) -> str:
