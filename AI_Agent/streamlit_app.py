@@ -106,7 +106,8 @@ def get_text(key, **kwargs):
     lang = st.session_state.get('language', 'en')
     # Validate language exists in TRANSLATIONS
     lang = lang if lang in TRANSLATIONS else 'en'
-    text = TRANSLATIONS[lang].get(key, TRANSLATIONS['en'][key])
+    # Try current language, then English fallback, then fall back to the key itself
+    text = TRANSLATIONS.get(lang, {}).get(key) or TRANSLATIONS.get('en', {}).get(key) or key
     if kwargs:
         return text.format(**kwargs)
     return text
