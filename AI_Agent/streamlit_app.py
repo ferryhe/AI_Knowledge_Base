@@ -123,7 +123,9 @@ def get_text(key, **kwargs):
 if "language" not in st.session_state:
     st.session_state.language = detect_system_language()
 
-st.set_page_config(page_title=get_text("page_title"), layout="wide")
+# Use static bilingual page title since set_page_config can only be called once
+# and won't update when language changes mid-session
+st.set_page_config(page_title="AI Knowledge Base Q&A | AI 知识库问答", layout="wide")
 
 # Header layout: title on the left, language toggle on the right
 col1, col2 = st.columns([6, 1])
