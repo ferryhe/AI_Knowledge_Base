@@ -72,9 +72,8 @@ def get_system_prompt(language: str = "en") -> str:
         )
     else:
         base_prompt += (
-            "7. LANGUAGE INSTRUCTION: Respond in the same language as the user's question. "
-            "If the question is in Chinese, respond in Chinese. If in English, respond in English. "
-            "Maintain the same professional tone and citation format regardless of language."
+            "7. LANGUAGE INSTRUCTION: Respond in English. "
+            "Maintain the same professional tone and citation format, and always use English for all explanations and summaries, even if the user's question is in another language."
         )
     
     return base_prompt
