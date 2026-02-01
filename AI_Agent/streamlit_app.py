@@ -117,10 +117,11 @@ if "language" not in st.session_state:
     st.session_state.language = detect_system_language()
 
 st.set_page_config(page_title=get_text("page_title"), layout="wide")
-st.title(get_text("title"))
 
-# Language toggle in the top right
+# Header layout: title on the left, language toggle on the right
 col1, col2 = st.columns([6, 1])
+with col1:
+    st.title(get_text("title"))
 with col2:
     current_lang = st.session_state.language
     new_lang = st.selectbox(
