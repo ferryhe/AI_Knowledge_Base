@@ -120,7 +120,7 @@ The tests monkeypatch OpenAI calls, so they do not require network access or an 
 ## Open WebUI Pipelines Integration
 
 1. Copy `scripts/responses_pipeline.py` into your Open WebUI Pipelines folder.
-2. Copy `scripts/agentic_rag.py` beside it if you want the full agentic workflow there as well.
+2. Copy `scripts/agentic_rag.py` and `scripts/query_enhancements.py` beside it if you want the full agentic workflow there as well.
 3. Mount the generated FAISS artifacts into the container.
 
 Example:
@@ -131,9 +131,10 @@ volumes:
   - ./AI_Agent/knowledge_base.meta.pkl:/data/knowledge_base.meta.pkl
   - ./AI_Agent/scripts/responses_pipeline.py:/app/pipelines/responses_pipeline.py
   - ./AI_Agent/scripts/agentic_rag.py:/app/pipelines/agentic_rag.py
+  - ./AI_Agent/scripts/query_enhancements.py:/app/pipelines/query_enhancements.py
 ```
 
-If `agentic_rag.py` is missing in the pipeline runtime, `responses_pipeline.py` falls back to single-pass retrieval.
+If `agentic_rag.py` is missing in the pipeline runtime, `responses_pipeline.py` falls back to single-pass retrieval. If `query_enhancements.py` is missing, the pipeline still runs but skips reranking and domain-aware planner guidance.
 
 ## Configuration
 
@@ -146,6 +147,7 @@ Environment variables:
 | `EMBEDDING_MODEL` | Embedding model for FAISS vectors | `text-embedding-3-large` |
 | `RAG_MODE` | `agentic` or `standard` | `agentic` |
 | `AGENTIC_MAX_ITERATIONS` | Max retrieval rounds in agentic mode | `2` |
+| `AGENTIC_SYNTHESIS_TOP_K` | Global cap on merged hits before final synthesis | computed from `TOP_K` |
 | `TOP_K` | Default retrieval size | `8` |
 | `SIMILARITY_THRESHOLD` | Minimum cosine similarity score | `0.0` |
 | `OUTPUT_LANGUAGE` | Final answer language | `en` |

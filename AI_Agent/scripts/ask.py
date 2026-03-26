@@ -32,6 +32,7 @@ DEFAULT_MODE = os.getenv("RAG_MODE", "agentic")
 DEFAULT_TOP_K = int(os.getenv("TOP_K", "8"))
 DEFAULT_SIMILARITY_THRESHOLD = float(os.getenv("SIMILARITY_THRESHOLD", "0.0"))
 DEFAULT_MAX_ITERATIONS = int(os.getenv("AGENTIC_MAX_ITERATIONS", "2"))
+DEFAULT_SYNTHESIS_TOP_K = os.getenv("AGENTIC_SYNTHESIS_TOP_K")
 DEFAULT_LANGUAGE = os.getenv("OUTPUT_LANGUAGE", "en")
 
 
@@ -278,6 +279,7 @@ def run_agentic_query(
         max_iterations=max_iterations,
         top_k=k,
         similarity_threshold=similarity_threshold,
+        synthesis_top_k=int(DEFAULT_SYNTHESIS_TOP_K) if DEFAULT_SYNTHESIS_TOP_K else None,
     )
     result = engine.run(question, history=history)
     return {
@@ -317,7 +319,7 @@ def run_query(
         question,
         language=language,
         history=history,
-        k=min(k, 4),
+        k=k,
         similarity_threshold=similarity_threshold,
         max_iterations=max_iterations,
     )

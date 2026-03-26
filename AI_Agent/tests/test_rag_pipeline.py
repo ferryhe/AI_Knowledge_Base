@@ -545,6 +545,39 @@ class TestAgenticQuery:
         assert requested_queries == [question]
         assert "Fallback answer" in result["answer"]
 
+    def test_agentic_query_applies_global_cap_before_synthesis(self):
+        captured = {}
+
+        def fake_synthesize(question, hits, language, history):
+            captured["hits"] = hits
+            return "done"
+
+        engine = AgenticRagEngine(
+            chat_fn=lambda messages, temperature: '{"sub_queries": ["governance risk", "actuarial insurance"]}',
+            retrieve_fn=lambda query, k, threshold: [
+                {
+                    "path": f"Knowledge_Base_MarkDown/{query.replace(' ', '_')}_a.md",
+                    "text": f"{query} governance risk actuarial insurance transparency controls",
+                    "retrieval_score": 0.9,
+                },
+                {
+                    "path": f"Knowledge_Base_MarkDown/{query.replace(' ', '_')}_b.md",
+                    "text": f"{query} general productivity notes",
+                    "retrieval_score": 0.7,
+                },
+            ],
+            synthesize_fn=fake_synthesize,
+            max_iterations=1,
+            top_k=2,
+            synthesis_top_k=2,
+        )
+
+        result = engine.run("What governance and risk controls should actuaries use for insurance AI models?")
+
+        assert len(captured["hits"]) == 2
+        assert len(result.hits) == 2
+        assert all("retrieval_score" in hit for hit in result.hits)
+
 
 class TestRetrievalEnhancements:
     """Test reranking and domain-aware query guidance."""
@@ -633,3 +666,30 @@ class TestRetrievalEnhancements:
         assert "governance" in planner_prompt
         assert "actuarial" in planner_prompt
         assert result.sub_queries == ["AI governance controls", "actuarial oversight"]
+
+    def test_run_query_preserves_requested_k_in_agentic_mode(self, monkeypatch):
+        captured = {}
+
+        def fake_run_agentic_query(client, question, **kwargs):
+            captured.update(kwargs)
+            return {
+                "mode": "agentic",
+                "answer": "ok",
+                "hits": [],
+                "sub_queries": [],
+                "executed_queries": [],
+                "iterations": 0,
+                "reflection_notes": [],
+                "retrieval_history": [],
+            }
+
+        monkeypatch.setattr(ask_module, "run_agentic_query", fake_run_agentic_query)
+
+        ask_module.run_query(
+            client=object(),
+            question="Test question",
+            mode="agentic",
+            k=7,
+        )
+
+        assert captured["k"] == 7

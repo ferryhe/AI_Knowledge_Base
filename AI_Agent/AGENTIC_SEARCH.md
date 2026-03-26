@@ -63,6 +63,7 @@ Environment variables:
 |---|---|---|
 | `RAG_MODE` | `agentic` or `standard` | `agentic` |
 | `AGENTIC_MAX_ITERATIONS` | max retrieval rounds in agentic mode | `2` |
+| `AGENTIC_SYNTHESIS_TOP_K` | global cap on merged evidence before final synthesis | computed from `TOP_K` |
 | `TOP_K` | top-k retrieval size | `8` |
 | `SIMILARITY_THRESHOLD` | minimum similarity score | `0.0` |
 | `OUTPUT_LANGUAGE` | final answer language | `en` |
@@ -80,7 +81,7 @@ python .\scripts\ask.py --mode agentic --show-trace "Compare governance and risk
 
 `responses_pipeline.py` will use agentic mode when `agentic_rag.py` is available alongside it.
 
-If only `responses_pipeline.py` is copied into another runtime and `agentic_rag.py` is missing, the pipeline falls back to the original single-pass retrieval behavior.
+If only `responses_pipeline.py` is copied into another runtime and `agentic_rag.py` is missing, the pipeline falls back to the original single-pass retrieval behavior. For full reranking and domain-aware prompts in the pipeline runtime, copy `query_enhancements.py` beside it as well.
 
 ## Rollback
 
@@ -99,8 +100,9 @@ To disable agentic behavior:
 
 ## Next Logical Step
 
-If this workflow proves stable, the next upgrade should target:
+If this workflow proves stable, the next upgrades should target:
 
-1. reranking retrieved chunks before synthesis
-2. richer planner prompts for actuarial / governance domain questions
-3. optional external tools beyond the local FAISS store
+1. global reranking across merged evidence with a token budget instead of a fixed hit count
+2. adaptive truncation for long answers and trace-heavy runs
+3. optional external tools and web search connectors beyond the local FAISS store
+4. richer evaluation and regression harnesses for agentic runs

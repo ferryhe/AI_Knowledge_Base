@@ -35,8 +35,11 @@ MODEL = os.getenv("MODEL", "gpt-4o")
 EMB_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-large")
 RAG_MODE = os.getenv("RAG_MODE", "agentic")
 AGENTIC_MAX_ITERATIONS = int(os.getenv("AGENTIC_MAX_ITERATIONS", "2"))
+AGENTIC_SYNTHESIS_TOP_K = os.getenv("AGENTIC_SYNTHESIS_TOP_K")
 INDEX_PATH = os.getenv("INDEX_PATH", "/data/knowledge_base.faiss")
 META_PATH = os.getenv("META_PATH", "/data/knowledge_base.meta.pkl")
+TOP_K = int(os.getenv("TOP_K", "8"))
+SIMILARITY_THRESHOLD = float(os.getenv("SIMILARITY_THRESHOLD", "0.0"))
 _INDEX_CACHE = None
 _DOCS_CACHE = None
 
@@ -102,7 +105,7 @@ def _retrieve(client: OpenAI, question: str, k: int = 8, similarity_threshold: f
             results.append({**docs[item_index], "retrieval_score": float(score)})
     if rerank_hits is not None:
         return rerank_hits(question, results, top_k=k)
-    return results
+    return results[:k]
 
 
 def _chat(client: OpenAI, messages: list[dict], temperature: float = 0.2) -> str:
@@ -146,9 +149,11 @@ def pipeline(messages: list[dict]):
             synthesize_fn=lambda prompt_question, hits, language, history: _answer_from_hits(client, prompt_question, hits),
             language="en",
             max_iterations=AGENTIC_MAX_ITERATIONS,
-            top_k=4,
+            top_k=TOP_K,
+            similarity_threshold=SIMILARITY_THRESHOLD,
+            synthesis_top_k=int(AGENTIC_SYNTHESIS_TOP_K) if AGENTIC_SYNTHESIS_TOP_K else None,
         )
         return engine.run(question).answer
 
-    hits = _retrieve(client, question)
+    hits = _retrieve(client, question, k=TOP_K, similarity_threshold=SIMILARITY_THRESHOLD)
     return _answer_from_hits(client, question, hits)

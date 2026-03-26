@@ -6,9 +6,9 @@ from dataclasses import dataclass
 from typing import Callable
 
 try:
-    from .query_enhancements import build_domain_context
+    from .query_enhancements import build_domain_context, rerank_hits
 except ImportError:
-    from query_enhancements import build_domain_context
+    from query_enhancements import build_domain_context, rerank_hits
 
 
 ChatFn = Callable[[list[dict], float], str]
@@ -97,6 +97,7 @@ class AgenticRagEngine:
         max_sub_queries: int = 4,
         top_k: int = 4,
         similarity_threshold: float = 0.0,
+        synthesis_top_k: int | None = None,
     ) -> None:
         self.chat_fn = chat_fn
         self.retrieve_fn = retrieve_fn
@@ -106,6 +107,11 @@ class AgenticRagEngine:
         self.max_sub_queries = max(1, max_sub_queries)
         self.top_k = max(1, top_k)
         self.similarity_threshold = similarity_threshold
+        self.synthesis_top_k = (
+            max(1, synthesis_top_k)
+            if synthesis_top_k is not None
+            else max(self.top_k, min(10, self.top_k * 2))
+        )
 
     def _truncate(self, value: str, limit: int = 220) -> str:
         text = " ".join(value.split())
@@ -173,6 +179,7 @@ class AgenticRagEngine:
         iteration: int,
     ) -> tuple[str, list[str], str]:
         domain_context = build_domain_context(question)
+        executed_lookup = {item.lower() for item in executed_queries}
         messages = [
             {
                 "role": "system",
@@ -202,7 +209,11 @@ class AgenticRagEngine:
         ]
 
         fallback_reason = "Reflection fallback triggered; proceeding to synthesis."
-        fallback_queries = [question] if not hits and iteration < self.max_iterations else []
+        fallback_queries = (
+            [question]
+            if not hits and iteration < self.max_iterations and question.lower() not in executed_lookup
+            else []
+        )
 
         try:
             payload = _extract_json_payload(self.chat_fn(messages, 0.0))
@@ -218,7 +229,13 @@ class AgenticRagEngine:
         except Exception:
             if fallback_queries:
                 return "continue", fallback_queries, "Reflection failed; retrying with the original question."
-            return "synthesize", [], fallback_reason
+            return "synthesize", [], "Reflection failed; proceeding to synthesis."
+
+    def _select_hits_for_synthesis(self, question: str, hits: list[dict]) -> list[dict]:
+        if not hits:
+            return []
+        capped_top_k = min(len(hits), self.synthesis_top_k)
+        return rerank_hits(question, hits, top_k=capped_top_k)
 
     def run(self, question: str, history: str | None = None) -> AgenticRagResult:
         sub_queries = self._plan_sub_queries(question)
@@ -285,11 +302,12 @@ class AgenticRagEngine:
             if not pending_queries:
                 break
 
-        answer = self.synthesize_fn(question, hits, self.language, history)
+        final_hits = self._select_hits_for_synthesis(question, hits)
+        answer = self.synthesize_fn(question, final_hits, self.language, history)
         return AgenticRagResult(
             question=question,
             answer=answer,
-            hits=hits,
+            hits=final_hits,
             sub_queries=sub_queries,
             executed_queries=executed_queries,
             retrieval_history=retrieval_history,
