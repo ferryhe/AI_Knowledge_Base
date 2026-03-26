@@ -7,11 +7,24 @@
 Instead of a single retrieval pass, the runtime can now:
 
 1. plan retrieval-oriented sub-queries from the user question
-2. retrieve evidence for each sub-query
+2. retrieve and rerank evidence for each sub-query
 3. reflect on coverage and optionally run one more retrieval round
 4. synthesize a grounded final answer with citations
 
 This keeps the original vector store format intact while improving multi-step, cross-document questions.
+
+## Quality Improvements In This Branch
+
+The current implementation adds two answer-quality upgrades without changing the storage layer:
+
+1. Hybrid reranking
+   - FAISS still retrieves the initial candidate set
+   - a local reranker then reorders candidates using query-term overlap, file-path overlap, domain-term overlap, and the original retrieval score
+   - this helps push governance, risk, actuarial, and insurance-specific chunks ahead of generic AI mentions
+
+2. Domain-aware planning and reflection
+   - the planner and reflector now adapt their prompts when the query looks actuarial, insurance, governance, risk, ethics, regulation, or AI-model focused
+   - this improves sub-query decomposition for questions that span frameworks, controls, assumptions, and implementation guidance
 
 ## Scope of This Upgrade
 

@@ -5,6 +5,11 @@ import re
 from dataclasses import dataclass
 from typing import Callable
 
+try:
+    from .query_enhancements import build_domain_context
+except ImportError:
+    from query_enhancements import build_domain_context
+
 
 ChatFn = Callable[[list[dict], float], str]
 RetrieveFn = Callable[[str, int, float], list[dict]]
@@ -109,6 +114,7 @@ class AgenticRagEngine:
         return f"{text[:limit].rstrip()}..."
 
     def _plan_sub_queries(self, question: str) -> list[str]:
+        domain_context = build_domain_context(question)
         messages = [
             {
                 "role": "system",
@@ -116,7 +122,8 @@ class AgenticRagEngine:
                     "You are a retrieval planner for a grounded RAG system over Markdown documents. "
                     "Return JSON only in the form {\"sub_queries\": [\"...\"]}. "
                     "Produce 2-4 distinct retrieval-oriented sub-queries that together cover the question. "
-                    "Do not answer the question."
+                    "Do not answer the question. "
+                    f"Domain guidance: {domain_context.planner_hint}"
                 ),
             },
             {
@@ -127,6 +134,7 @@ class AgenticRagEngine:
                     "- Use the same language as the question when possible.\n"
                     "- Preserve important domain terms and named standards.\n"
                     "- Make each sub-query searchable against a document corpus.\n"
+                    f"- Domain focus: {domain_context.planner_hint}\n"
                     "- Return JSON only.\n"
                 ),
             },
@@ -164,6 +172,7 @@ class AgenticRagEngine:
         hits: list[dict],
         iteration: int,
     ) -> tuple[str, list[str], str]:
+        domain_context = build_domain_context(question)
         messages = [
             {
                 "role": "system",
@@ -171,7 +180,8 @@ class AgenticRagEngine:
                     "You evaluate whether the current evidence is sufficient for a grounded RAG answer. "
                     "Return JSON only in the form "
                     "{\"decision\": \"continue\" | \"synthesize\", \"reason\": \"...\", \"additional_queries\": [\"...\"]}. "
-                    "Choose \"continue\" only if a major aspect of the question is still missing."
+                    "Choose \"continue\" only if a major aspect of the question is still missing. "
+                    f"Domain guidance: {domain_context.reflector_hint}"
                 ),
             },
             {
@@ -185,6 +195,7 @@ class AgenticRagEngine:
                     "Rules:\n"
                     "- If continuing, provide at most 2 concrete retrieval queries.\n"
                     "- If the evidence is already sufficient, choose synthesize.\n"
+                    f"- Domain focus: {domain_context.reflector_hint}\n"
                     "- Return JSON only.\n"
                 ),
             },

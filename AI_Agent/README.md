@@ -9,6 +9,11 @@ It now supports two query paths:
 
 The upgrade keeps the existing FAISS index format intact while improving complex, cross-document questions.
 
+This branch also adds:
+
+- local hybrid reranking on top of FAISS retrieval
+- domain-aware planner and reflector prompts for actuarial, insurance, governance, risk, ethics, and AI-model questions
+
 ## Project Structure
 
 ```text

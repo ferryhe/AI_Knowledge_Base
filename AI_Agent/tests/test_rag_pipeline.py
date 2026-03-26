@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 from types import SimpleNamespace
 
+import numpy as np
 import pytest
 
 AI_AGENT_DIR = Path(__file__).resolve().parents[1]
@@ -17,6 +18,8 @@ if str(AI_AGENT_DIR) not in sys.path:
 
 from scripts import ask as ask_module
 from scripts import build_index as build_index_module
+from scripts import query_enhancements as enhancements_module
+from scripts.agentic_rag import AgenticRagEngine
 from scripts.utils import validate_file_content
 
 
@@ -541,3 +544,92 @@ class TestAgenticQuery:
         assert result["sub_queries"] == [question]
         assert requested_queries == [question]
         assert "Fallback answer" in result["answer"]
+
+
+class TestRetrievalEnhancements:
+    """Test reranking and domain-aware query guidance."""
+
+    def test_build_domain_context_detects_actuarial_governance_query(self):
+        context = enhancements_module.build_domain_context(
+            "What governance and risk controls should actuaries use for insurance AI models?"
+        )
+
+        assert "governance" in context.planner_hint.lower()
+        assert "risk" in context.reflector_hint.lower()
+        assert "actuarial" in context.priority_terms
+        assert "insurance" in context.priority_terms
+
+    def test_rerank_hits_promotes_domain_relevant_chunk(self):
+        hits = [
+            {
+                "path": "Knowledge_Base_MarkDown/copilot_notes.md",
+                "text": "General AI productivity tips for meeting notes and drafting.",
+                "retrieval_score": 0.95,
+            },
+            {
+                "path": "Knowledge_Base_MarkDown/governance_controls.md",
+                "text": "AI governance, risk controls, transparency, and actuarial oversight in insurance.",
+                "retrieval_score": 0.80,
+            },
+        ]
+
+        reranked = enhancements_module.rerank_hits(
+            "What governance and risk controls should actuaries use for insurance AI models?",
+            hits,
+            top_k=1,
+        )
+
+        assert reranked[0]["path"].endswith("governance_controls.md")
+        assert reranked[0]["rerank_score"] >= reranked[0]["retrieval_score"]
+
+    def test_retrieve_uses_reranking_before_trimming(self, monkeypatch):
+        class FakeIndex:
+            def search(self, query_array, k):
+                return (
+                    np.array([[0.95, 0.80]], dtype="float32"),
+                    np.array([[0, 1]], dtype="int64"),
+                )
+
+        docs = [
+            {
+                "path": "Knowledge_Base_MarkDown/copilot_notes.md",
+                "text": "General AI productivity tips for meeting notes and drafting.",
+            },
+            {
+                "path": "Knowledge_Base_MarkDown/governance_controls.md",
+                "text": "AI governance, risk controls, transparency, and actuarial oversight in insurance.",
+            },
+        ]
+
+        monkeypatch.setattr(ask_module, "_load_artifacts", lambda: (FakeIndex(), docs))
+        monkeypatch.setattr(ask_module, "_create_embedding", lambda client, text: _vectorize(text))
+
+        hits = ask_module.retrieve(
+            client=object(),
+            question="What governance and risk controls should actuaries use for insurance AI models?",
+            k=1,
+        )
+
+        assert len(hits) == 1
+        assert hits[0]["path"].endswith("governance_controls.md")
+
+    def test_agentic_planner_prompt_includes_domain_guidance(self):
+        captured_messages = []
+
+        def fake_chat(messages, temperature):
+            captured_messages.append(messages)
+            return '{"sub_queries": ["AI governance controls", "actuarial oversight"]}'
+
+        engine = AgenticRagEngine(
+            chat_fn=fake_chat,
+            retrieve_fn=lambda question, k, threshold: [],
+            synthesize_fn=lambda question, hits, language, history: "done",
+            max_iterations=1,
+        )
+
+        result = engine.run("What governance and risk controls should actuaries use for insurance AI models?")
+
+        planner_prompt = captured_messages[0][1]["content"].lower()
+        assert "governance" in planner_prompt
+        assert "actuarial" in planner_prompt
+        assert result.sub_queries == ["AI governance controls", "actuarial oversight"]

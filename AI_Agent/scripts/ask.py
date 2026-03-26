@@ -18,6 +18,7 @@ if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
 from agentic_rag import AgenticRagEngine
+from query_enhancements import rerank_hits
 from utils import retry_with_exponential_backoff
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -192,14 +193,15 @@ def retrieve(
     query_array = np.array([query_vec], dtype="float32")
     faiss.normalize_L2(query_array)
 
-    distances, indices = index.search(query_array, k)
+    search_k = min(len(docs), max(k, max(k * 4, 12)))
+    distances, indices = index.search(query_array, search_k)
 
     results = []
     for score, item_index in zip(distances[0], indices[0]):
         if 0 <= item_index < len(docs) and score >= similarity_threshold:
-            results.append(docs[item_index])
+            results.append({**docs[item_index], "retrieval_score": float(score)})
 
-    return results
+    return rerank_hits(question, results, top_k=k)
 
 
 def render_context(hits: list[dict]) -> str:

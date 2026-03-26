@@ -23,6 +23,11 @@ try:
 except ImportError:
     AgenticRagEngine = None
 
+try:
+    from query_enhancements import rerank_hits
+except ImportError:
+    rerank_hits = None
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 load_dotenv(dotenv_path=PROJECT_ROOT / ".env")
 
@@ -89,11 +94,14 @@ def _retrieve(client: OpenAI, question: str, k: int = 8, similarity_threshold: f
     query_array = np.array([query_vec], dtype="float32")
     faiss.normalize_L2(query_array)
 
-    distances, indices = index.search(query_array, k)
+    search_k = min(len(docs), max(k, max(k * 4, 12)))
+    distances, indices = index.search(query_array, search_k)
     results = []
     for score, item_index in zip(distances[0], indices[0]):
         if 0 <= item_index < len(docs) and score >= similarity_threshold:
-            results.append(docs[item_index])
+            results.append({**docs[item_index], "retrieval_score": float(score)})
+    if rerank_hits is not None:
+        return rerank_hits(question, results, top_k=k)
     return results
 
 
