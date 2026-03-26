@@ -8,11 +8,9 @@ from openai import OpenAI
 from scripts.ask import (
     INDEX_PATH,
     META_PATH,
-    MODEL,
-    get_system_prompt,
-    format_user_prompt,
+    answer_from_hits,
     get_document_snippets,
-    retrieve,
+    run_query,
 )
 
 REPO_URL = "https://github.com/ferryhe/AI_Knowledge_Base"
@@ -272,20 +270,24 @@ if trigger_question:
                         get_text("doc_not_found", doc_path=target_doc_path)
                     )
                 convo_history = None
+                answer = answer_from_hits(
+                    client,
+                    trigger_question,
+                    hits,
+                    language=st.session_state.language,
+                    history=convo_history,
+                )
             else:
-                hits = retrieve(client, trigger_question)
                 convo_history = _format_history_for_prompt()
-            context = "\n\n".join(f"[{i+1}] {hit['path']}\n{hit['text']}" for i, hit in enumerate(hits))
-            
-            # Get system prompt with language preference
-            system_prompt = get_system_prompt(st.session_state.language)
-            
-            messages = [
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": format_user_prompt(trigger_question, context, convo_history)},
-            ]
-            response = client.chat.completions.create(model=MODEL, messages=messages, temperature=0.2)
-            answer = response.choices[0].message.content
+                result = run_query(
+                    client,
+                    trigger_question,
+                    mode=os.getenv("RAG_MODE", "agentic"),
+                    language=st.session_state.language,
+                    history=convo_history,
+                )
+                hits = result["hits"]
+                answer = result["answer"]
             st.session_state.history.append({"question": trigger_question, "answer": answer, "hits": hits})
     except FileNotFoundError as err:
         st.error(f"{err}")

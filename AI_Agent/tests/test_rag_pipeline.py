@@ -402,3 +402,142 @@ class TestNoMatchResponse:
         # The system should handle this gracefully
         # If no hits, the main() function should print "I don't have enough information"
         assert isinstance(hits, list)  # Should return a list, even if empty
+
+
+class TestAgenticQuery:
+    """Test the iterative Agentic RAG workflow."""
+
+    def test_run_agentic_query_decomposes_and_synthesizes(self, monkeypatch):
+        responses = iter(
+            [
+                '{"sub_queries": ["governance principles", "risk management expectations"]}',
+                '{"decision": "synthesize", "reason": "Enough evidence collected.", "additional_queries": []}',
+                "Summary with [1] Knowledge_Base_MarkDown/governance.md and [2] Knowledge_Base_MarkDown/risk.md",
+            ]
+        )
+        requested_queries = []
+
+        def fake_chat_completion(client, messages, temperature=0.2):
+            return next(responses)
+
+        def fake_retrieve(client, question, k=8, similarity_threshold=0.0):
+            requested_queries.append(question)
+            lookup = {
+                "governance principles": [
+                    {
+                        "path": "Knowledge_Base_MarkDown/governance.md",
+                        "text": "Governance guidance focuses on oversight and accountability.",
+                    }
+                ],
+                "risk management expectations": [
+                    {
+                        "path": "Knowledge_Base_MarkDown/risk.md",
+                        "text": "Risk management guidance emphasizes controls and monitoring.",
+                    }
+                ],
+            }
+            return lookup.get(question, [])
+
+        monkeypatch.setattr(ask_module, "_create_chat_completion", fake_chat_completion)
+        monkeypatch.setattr(ask_module, "retrieve", fake_retrieve)
+
+        result = ask_module.run_agentic_query(
+            client=object(),
+            question="Compare the governance and risk themes in the knowledge base.",
+            language="en",
+            k=2,
+            max_iterations=2,
+        )
+
+        assert result["mode"] == "agentic"
+        assert result["sub_queries"] == ["governance principles", "risk management expectations"]
+        assert requested_queries == ["governance principles", "risk management expectations"]
+        assert len(result["hits"]) == 2
+        assert result["iterations"] == 1
+        assert "Enough evidence collected." in result["reflection_notes"]
+        assert "Summary with [1]" in result["answer"]
+
+    def test_run_agentic_query_can_request_second_iteration(self, monkeypatch):
+        responses = iter(
+            [
+                '{"sub_queries": ["governance framework"]}',
+                '{"decision": "continue", "reason": "Need a dedicated risk query.", "additional_queries": ["risk controls"]}',
+                "Final answer with [1] Knowledge_Base_MarkDown/governance.md and [2] Knowledge_Base_MarkDown/risk.md",
+            ]
+        )
+        requested_queries = []
+
+        def fake_chat_completion(client, messages, temperature=0.2):
+            return next(responses)
+
+        def fake_retrieve(client, question, k=8, similarity_threshold=0.0):
+            requested_queries.append(question)
+            lookup = {
+                "governance framework": [
+                    {
+                        "path": "Knowledge_Base_MarkDown/governance.md",
+                        "text": "Governance coverage focuses on strategy and oversight.",
+                    }
+                ],
+                "risk controls": [
+                    {
+                        "path": "Knowledge_Base_MarkDown/risk.md",
+                        "text": "Risk controls cover mitigation, monitoring, and escalation.",
+                    }
+                ],
+            }
+            return lookup.get(question, [])
+
+        monkeypatch.setattr(ask_module, "_create_chat_completion", fake_chat_completion)
+        monkeypatch.setattr(ask_module, "retrieve", fake_retrieve)
+
+        result = ask_module.run_agentic_query(
+            client=object(),
+            question="Summarize governance and risk control guidance.",
+            language="en",
+            k=2,
+            max_iterations=2,
+        )
+
+        assert requested_queries == ["governance framework", "risk controls"]
+        assert result["iterations"] == 2
+        assert result["executed_queries"] == ["governance framework", "risk controls"]
+        assert "Need a dedicated risk query." in result["reflection_notes"]
+        assert any("iteration limit" in note.lower() for note in result["reflection_notes"])
+
+    def test_run_agentic_query_falls_back_to_original_question(self, monkeypatch):
+        question = "What are the governance priorities?"
+        responses = iter(
+            [
+                "not-json",
+                "Fallback answer with [1] Knowledge_Base_MarkDown/governance.md",
+            ]
+        )
+        requested_queries = []
+
+        def fake_chat_completion(client, messages, temperature=0.2):
+            return next(responses)
+
+        def fake_retrieve(client, current_question, k=8, similarity_threshold=0.0):
+            requested_queries.append(current_question)
+            return [
+                {
+                    "path": "Knowledge_Base_MarkDown/governance.md",
+                    "text": "Governance priorities include accountability and policy alignment.",
+                }
+            ]
+
+        monkeypatch.setattr(ask_module, "_create_chat_completion", fake_chat_completion)
+        monkeypatch.setattr(ask_module, "retrieve", fake_retrieve)
+
+        result = ask_module.run_agentic_query(
+            client=object(),
+            question=question,
+            language="en",
+            k=2,
+            max_iterations=1,
+        )
+
+        assert result["sub_queries"] == [question]
+        assert requested_queries == [question]
+        assert "Fallback answer" in result["answer"]

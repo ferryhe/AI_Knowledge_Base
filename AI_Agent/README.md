@@ -1,46 +1,57 @@
-# IAA Knowledge Base Agent (Runnable)
+# IAA Knowledge Base Agent
 
-This project builds a Retrieval-Augmented Generation (RAG) workflow on top of the Markdown files stored in `Knowledge_Base_MarkDown/`.  
-It provides both **command-line querying** and an **Open WebUI Pipelines** integration so the latest IAA AI documentation can be queried with citations.
+This project builds a Retrieval-Augmented Generation workflow on top of the Markdown files stored in `Knowledge_Base_MarkDown/`.
 
----
+It now supports two query paths:
+
+- `agentic`: planner -> multi-query retrieval -> reflection -> synthesis
+- `standard`: single retrieval pass -> synthesis
+
+The upgrade keeps the existing FAISS index format intact while improving complex, cross-document questions.
 
 ## Project Structure
-```
+
+```text
 AI_Agent/
   scripts/
-    build_index.py          # chunks & embeds Knowledge_Base_MarkDown
+    build_index.py          # chunks and embeds Knowledge_Base_MarkDown
     ask.py                  # CLI question answering
-    responses_pipeline.py   # drop-in pipeline for Open WebUI
+    agentic_rag.py          # iterative agentic workflow engine
+    responses_pipeline.py   # Open WebUI pipeline entry point
   tests/
-    test_smoke.py           # offline regression test for index + retrieval
+    test_smoke.py
+    test_rag_pipeline.py
   streamlit_app.py          # optional local UI
+  AGENTIC_SEARCH.md         # agentic workflow notes
   requirements.txt
   Makefile
   .env.example
-  knowledge_base.faiss      # generated FAISS index
-  knowledge_base.meta.pkl   # generated metadata
+  knowledge_base.faiss
+  knowledge_base.meta.pkl
 ```
-
----
 
 ## Quick Start
 
 ### 1. Prepare Environment
-- Install **Python 3.9+** and **git**.
-- Copy `.env.example` to `.env` and set your `OPENAI_API_KEY`:
-  ```bash
-  cd AI_Agent
-  cp .env.example .env   # use copy .env.example .env on Windows
-  ```
+
+- Install Python 3.9+ and git.
+- Copy `.env.example` to `.env` and set `OPENAI_API_KEY`.
+
+```powershell
+cd AI_Agent
+copy .env.example .env
+```
 
 ### 2. Install Dependencies
-Using GNU Make (Linux/macOS/WSL):
+
+With `make`:
+
 ```bash
 make setup
 ```
 
-Windows (without `make`):
+Without `make`:
+
 ```powershell
 python -m venv .venv
 .venv\Scripts\activate
@@ -48,120 +59,123 @@ pip install -r requirements.txt
 ```
 
 ### 3. Build the Vector Index
-GNU Make / POSIX:
-```bash
-make index
-```
 
-PowerShell (without `make`):
 ```powershell
 cd AI_Agent
-.\.venv\Scripts\activate
 python .\scripts\build_index.py --source ..\Knowledge_Base_MarkDown
 ```
 
-This script reads every Markdown file from `../Knowledge_Base_MarkDown/`, chunks them, and writes:
+This writes:
+
 - `knowledge_base.faiss`
 - `knowledge_base.meta.pkl`
 
-You can override the source folder or output paths with the env vars in `.env`.
+### 4. Ask Questions
 
-### 4. Ask Questions (Command Line)
-```bash
-make ask q="summarize the governance framework consultation draft"
-```
-Or directly:
+Agentic mode is the default:
+
 ```powershell
-python scripts/ask.py "summarize the governance framework consultation draft"
+cd AI_Agent
+python .\scripts\ask.py "What themes connect the governance and risk documents?"
 ```
 
-### 5. Optional: Local Streamlit UI
-```bash
-pip install streamlit         # only needed once
-streamlit run streamlit_app.py
-```
+Force the original single-pass mode:
 
-PowerShell example (after activating `.venv`):
 ```powershell
+python .\scripts\ask.py --mode standard "Summarize the governance framework"
+```
+
+Inspect the planner and reflection trace:
+
+```powershell
+python .\scripts\ask.py --mode agentic --show-trace "Compare governance and risk control guidance"
+```
+
+### 5. Optional Streamlit UI
+
+```powershell
+cd AI_Agent
 pip install streamlit
 streamlit run .\streamlit_app.py
 ```
 
-The UI now disables the "Ask" button until `OPENAI_API_KEY` is set and the FAISS artifacts exist; rebuild the index whenever Markdown files change.
+The Streamlit app now uses the same query runtime as the CLI for normal questions.
 
 ## Running Tests
-- Smoke tests live under `tests/` and verify that chunking, FAISS serialization, and CLI retrieval stay aligned.
-- Run them locally (no API key or network access required—the suite monkeypatches OpenAI calls):
-  ```powershell
-  cd AI_Agent
-  pytest tests/test_smoke.py
-  ```
-- Incorporate the test run into your workflow whenever you touch `scripts/` or dependency versions to catch regressions early.
 
----
+Use the same Python interpreter that has the dependencies installed:
+
+```powershell
+cd AI_Agent
+python -m pytest tests/test_smoke.py tests/test_rag_pipeline.py
+```
+
+The tests monkeypatch OpenAI calls, so they do not require network access or an API key.
 
 ## Open WebUI Pipelines Integration
+
 1. Copy `scripts/responses_pipeline.py` into your Open WebUI Pipelines folder.
-2. Mount the generated files into the container:
-   ```yaml
-   volumes:
-     - ./AI_Agent/knowledge_base.faiss:/data/knowledge_base.faiss
-     - ./AI_Agent/knowledge_base.meta.pkl:/data/knowledge_base.meta.pkl
-     - ./AI_Agent/scripts/responses_pipeline.py:/app/pipelines/responses_pipeline.py
-   ```
-3. The pipeline retrieves the top chunks from the index and answers with path citations.
+2. Copy `scripts/agentic_rag.py` beside it if you want the full agentic workflow there as well.
+3. Mount the generated FAISS artifacts into the container.
 
-### Rebuilding Workflow
-1. Update Markdown files under `../Knowledge_Base_MarkDown/`.
-2. Run `python scripts/build_index.py` (or `make index`) to regenerate `knowledge_base.*`.
-3. Call `scripts.ask.refresh_cache()` or restart Streamlit/Open WebUI so cached indexes pick up the changes.
+Example:
 
---- 
+```yaml
+volumes:
+  - ./AI_Agent/knowledge_base.faiss:/data/knowledge_base.faiss
+  - ./AI_Agent/knowledge_base.meta.pkl:/data/knowledge_base.meta.pkl
+  - ./AI_Agent/scripts/responses_pipeline.py:/app/pipelines/responses_pipeline.py
+  - ./AI_Agent/scripts/agentic_rag.py:/app/pipelines/agentic_rag.py
+```
+
+If `agentic_rag.py` is missing in the pipeline runtime, `responses_pipeline.py` falls back to single-pass retrieval.
 
 ## Configuration
-Environment variables (stored in `.env`):
 
-| Variable      | Description                               | Default                                     |
-|---------------|-------------------------------------------|---------------------------------------------|
-| `OPENAI_API_KEY` | API key used for embeddings + chat        | _(required)_                                |
-| `MODEL`       | Chat model for responses                  | `gpt-4o`                                    |
-| `EMBEDDING_MODEL` | Embedding model for FAISS vectors        | `text-embedding-3-large`                    |
-| `SOURCE_DIR`  | Path to Markdown corpus                   | `../Knowledge_Base_MarkDown`                |
-| `INDEX_PATH`  | FAISS file location                       | `knowledge_base.faiss`                      |
-| `META_PATH`   | Metadata pickle location                  | `knowledge_base.meta.pkl`                   |
-| `STREAMLIT_PORT` | Override default Streamlit port (optional) | `8501` (handled via `streamlit` CLI)      |
+Environment variables:
 
----
+| Variable | Description | Default |
+|---|---|---|
+| `OPENAI_API_KEY` | API key used for embeddings and chat | required |
+| `MODEL` | Chat model for answers | `gpt-4o` |
+| `EMBEDDING_MODEL` | Embedding model for FAISS vectors | `text-embedding-3-large` |
+| `RAG_MODE` | `agentic` or `standard` | `agentic` |
+| `AGENTIC_MAX_ITERATIONS` | Max retrieval rounds in agentic mode | `2` |
+| `TOP_K` | Default retrieval size | `8` |
+| `SIMILARITY_THRESHOLD` | Minimum cosine similarity score | `0.0` |
+| `OUTPUT_LANGUAGE` | Final answer language | `en` |
+| `SOURCE_DIR` | Path to Markdown corpus | `../Knowledge_Base_MarkDown` |
+| `INDEX_PATH` | FAISS file location | `knowledge_base.faiss` |
+| `META_PATH` | Metadata pickle location | `knowledge_base.meta.pkl` |
 
 ## FAQ
 
-**Q: Which files are indexed?**  
-All `.md` files under `SOURCE_DIR`. If you add more documentation, re-run `make index`.
+**Which files are indexed?**
 
-**Q: Can I switch to another LLM?**  
-Yes. Set `MODEL` in `AI_Agent/.env` (any Chat Completions compatible model).
+All `.md` files under `SOURCE_DIR`.
 
-**Q: What about non-Markdown assets?**  
-Images live in `*_assets` folders and are not embedded. Add OCR or PDF handling as needed.
+**How do I disable Agentic RAG?**
 
-**Q: Where is my API key stored?**  
-In `AI_Agent/.env`, which is ignored by git via the root `.gitignore`.
+Set `RAG_MODE=standard` or pass `--mode standard` to `scripts/ask.py`.
 
----
+**Can I switch to another model?**
+
+Yes. Set `MODEL` in `AI_Agent/.env`.
+
+**What about non-Markdown assets?**
+
+Images in `*_assets/` folders are not embedded.
 
 ## Troubleshooting
 
 | Symptom | Likely Cause | Fix |
-|---------|--------------|-----|
-| `Missing vector store files` | `knowledge_base.*` not built yet | Run `make index` (or the PowerShell command above) and keep the files next to this README. |
-| `ModuleNotFoundError: faiss` | Virtual environment not activated or install failed | Re-run `make setup` (POSIX) or `python -m venv .venv; .\.venv\Scripts\activate; pip install -r requirements.txt`. |
-| Streamlit button disabled | API key or index missing | Set `OPENAI_API_KEY` in `.env` and rebuild the index. |
-| Requests hitting wrong OpenAI model | `MODEL` only changed in `.env` | Streamlit/CLI now respect `MODEL`; restart the process after editing `.env`. |
+|---|---|---|
+| `Missing vector store files` | index not built yet | run `python scripts/build_index.py` |
+| `ModuleNotFoundError: faiss` | dependency missing in current interpreter | install `requirements.txt` in the same interpreter used to run the app |
+| Streamlit button disabled | API key or index missing | set `OPENAI_API_KEY` and rebuild the index |
+| Pipeline stays single-pass | `agentic_rag.py` not present in pipeline runtime | copy or mount `agentic_rag.py` next to `responses_pipeline.py` |
 
-For container deployments, inject secrets via environment variables (e.g., `OPENAI_API_KEY`, `MODEL`) instead of copying `.env`, and mount the generated FAISS files read-only to keep the runtime stateless.
+## Notes
 
----
-
-## License
-This agent indexes internal Markdown content from `Knowledge_Base_MarkDown/`.  
-Ensure you have permission before exposing the generated artifacts externally.
+- `AGENTIC_SEARCH.md` documents the runtime flow, rollback path, and current scope.
+- This upgrade is local-corpus Agentic RAG. It does not yet add external web search or multi-agent research.
