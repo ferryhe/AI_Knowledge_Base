@@ -1,20 +1,24 @@
 from __future__ import annotations
 
+import argparse
 import os
 import pickle
 import sys
 from pathlib import Path
+from typing import Any
 
 import faiss
 import numpy as np
 from dotenv import load_dotenv
 from openai import OpenAI
 
-# Add parent directory to path for utils import
+# Add parent directory to path for local imports when executed as a script.
 SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
+from agentic_rag import AgenticRagEngine
+from query_enhancements import rerank_hits
 from utils import retry_with_exponential_backoff
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -24,6 +28,12 @@ load_dotenv(dotenv_path=PROJECT_ROOT / ".env")
 
 MODEL = os.getenv("MODEL", "gpt-4o")
 EMB_MODEL = os.getenv("EMBEDDING_MODEL", "text-embedding-3-large")
+DEFAULT_MODE = os.getenv("RAG_MODE", "agentic")
+DEFAULT_TOP_K = int(os.getenv("TOP_K", "8"))
+DEFAULT_SIMILARITY_THRESHOLD = float(os.getenv("SIMILARITY_THRESHOLD", "0.0"))
+DEFAULT_MAX_ITERATIONS = int(os.getenv("AGENTIC_MAX_ITERATIONS", "2"))
+DEFAULT_SYNTHESIS_TOP_K = os.getenv("AGENTIC_SYNTHESIS_TOP_K")
+DEFAULT_LANGUAGE = os.getenv("OUTPUT_LANGUAGE", "en")
 
 
 def _resolve_path(value: str | None, default: Path) -> Path:
@@ -40,19 +50,22 @@ META_PATH = _resolve_path(os.getenv("META_PATH"), PROJECT_ROOT / "knowledge_base
 _INDEX_CACHE = None
 _DOCS_CACHE = None
 
+
 def _normalize_path(path: str) -> str:
     return path.replace("\\", "/").lower()
+
 
 def get_system_prompt(language: str = "en") -> str:
     """
     Get the system prompt with language-specific instructions.
-    
+
     Args:
         language: Language code ('en' or 'zh') - determines the response language
-    
+
     Returns:
         System prompt with language instructions
     """
+
     base_prompt = (
         "You are the documentation expert for the IAA AI Knowledge Base. "
         "CRITICAL INSTRUCTIONS:\n"
@@ -64,7 +77,7 @@ def get_system_prompt(language: str = "en") -> str:
         "5. NEVER make up information or draw conclusions not directly supported by the snippets.\n"
         "6. If you're uncertain about any detail, explicitly state your uncertainty.\n"
     )
-    
+
     if language == "zh":
         base_prompt += (
             "7. LANGUAGE INSTRUCTION: Respond in Chinese (中文). "
@@ -75,11 +88,11 @@ def get_system_prompt(language: str = "en") -> str:
             "7. LANGUAGE INSTRUCTION: Respond in English. "
             "Maintain the same professional tone and citation format, and always use English for all explanations and summaries, even if the user's question is in another language."
         )
-    
+
     return base_prompt
 
-# Deprecated: Use get_system_prompt(language) instead for language-specific responses
-# This constant is kept for backward compatibility but only supports English responses
+
+# Deprecated: Use get_system_prompt(language) instead for language-specific responses.
 SYSTEM_PROMPT = get_system_prompt("en")
 
 
@@ -151,76 +164,255 @@ def _create_chat_completion(client: OpenAI, messages: list[dict], temperature: f
     response = client.chat.completions.create(
         model=MODEL,
         messages=messages,
-        temperature=temperature
+        temperature=temperature,
     )
     return response.choices[0].message.content
 
 
-def retrieve(client: OpenAI, question: str, k: int = 8, similarity_threshold: float = 0.0):
+def retrieve(
+    client: OpenAI,
+    question: str,
+    k: int = DEFAULT_TOP_K,
+    similarity_threshold: float = DEFAULT_SIMILARITY_THRESHOLD,
+):
     """
     Retrieve relevant document chunks using vector similarity search.
-    
+
     Args:
         client: OpenAI client instance
         question: User's query
-        k: Number of top results to return (default 8)
-        similarity_threshold: Minimum cosine similarity score (0.0-1.0).
-                            Default 0.0 returns all k results.
-                            Recommended: 0.3-0.5 for stricter filtering.
-    
+        k: Number of top results to return
+        similarity_threshold: Minimum cosine similarity score (0.0-1.0)
+
     Returns:
         List of document chunks with metadata, filtered by similarity threshold
     """
+
     index, docs = _load_artifacts()
 
     query_vec = _create_embedding(client, question)
     query_array = np.array([query_vec], dtype="float32")
     faiss.normalize_L2(query_array)
 
-    # FAISS IndexFlatIP returns cosine similarity scores (higher is better)
-    distances, indices = index.search(query_array, k)
-    
-    # Filter by similarity threshold
+    search_k = min(len(docs), max(k, max(k * 4, 12)))
+    distances, indices = index.search(query_array, search_k)
+
     results = []
-    for score, i in zip(distances[0], indices[0]):
-        if 0 <= i < len(docs) and score >= similarity_threshold:
-            results.append(docs[i])
-    
-    return results
+    for score, item_index in zip(distances[0], indices[0]):
+        if 0 <= item_index < len(docs) and score >= similarity_threshold:
+            results.append({**docs[item_index], "retrieval_score": float(score)})
+
+    return rerank_hits(question, results, top_k=k)
+
+
+def render_context(hits: list[dict]) -> str:
+    return "\n\n".join(f"[{index + 1}] {hit['path']}\n{hit['text']}" for index, hit in enumerate(hits))
+
+
+def answer_from_hits(
+    client: OpenAI,
+    question: str,
+    hits: list[dict],
+    *,
+    language: str = DEFAULT_LANGUAGE,
+    history: str | None = None,
+) -> str:
+    if not hits:
+        return "I don't have enough information to answer this question."
+
+    messages = [
+        {"role": "system", "content": get_system_prompt(language)},
+        {"role": "user", "content": format_user_prompt(question, render_context(hits), history)},
+    ]
+    return _create_chat_completion(client, messages)
+
+
+def run_standard_query(
+    client: OpenAI,
+    question: str,
+    *,
+    language: str = DEFAULT_LANGUAGE,
+    history: str | None = None,
+    k: int = DEFAULT_TOP_K,
+    similarity_threshold: float = DEFAULT_SIMILARITY_THRESHOLD,
+) -> dict[str, Any]:
+    hits = retrieve(client, question, k=k, similarity_threshold=similarity_threshold)
+    answer = answer_from_hits(client, question, hits, language=language, history=history)
+    return {
+        "mode": "standard",
+        "answer": answer,
+        "hits": hits,
+        "sub_queries": [question],
+        "executed_queries": [question] if hits else [],
+        "iterations": 1 if hits else 0,
+        "reflection_notes": [],
+        "retrieval_history": [],
+    }
+
+
+def run_agentic_query(
+    client: OpenAI,
+    question: str,
+    *,
+    language: str = DEFAULT_LANGUAGE,
+    history: str | None = None,
+    k: int = 4,
+    similarity_threshold: float = DEFAULT_SIMILARITY_THRESHOLD,
+    max_iterations: int = DEFAULT_MAX_ITERATIONS,
+) -> dict[str, Any]:
+    engine = AgenticRagEngine(
+        chat_fn=lambda messages, temperature=0.2: _create_chat_completion(client, messages, temperature),
+        retrieve_fn=lambda query, round_k, threshold: retrieve(
+            client,
+            query,
+            k=round_k,
+            similarity_threshold=threshold,
+        ),
+        synthesize_fn=lambda prompt_question, hits, response_language, conversation_history: answer_from_hits(
+            client,
+            prompt_question,
+            hits,
+            language=response_language,
+            history=conversation_history,
+        ),
+        language=language,
+        max_iterations=max_iterations,
+        top_k=k,
+        similarity_threshold=similarity_threshold,
+        synthesis_top_k=int(DEFAULT_SYNTHESIS_TOP_K) if DEFAULT_SYNTHESIS_TOP_K else None,
+    )
+    result = engine.run(question, history=history)
+    return {
+        "mode": "agentic",
+        "answer": result.answer,
+        "hits": result.hits,
+        "sub_queries": result.sub_queries,
+        "executed_queries": result.executed_queries,
+        "iterations": result.iterations,
+        "reflection_notes": result.reflection_notes,
+        "retrieval_history": result.retrieval_history,
+    }
+
+
+def run_query(
+    client: OpenAI,
+    question: str,
+    *,
+    mode: str = DEFAULT_MODE,
+    language: str = DEFAULT_LANGUAGE,
+    history: str | None = None,
+    k: int = DEFAULT_TOP_K,
+    similarity_threshold: float = DEFAULT_SIMILARITY_THRESHOLD,
+    max_iterations: int = DEFAULT_MAX_ITERATIONS,
+) -> dict[str, Any]:
+    if mode == "standard":
+        return run_standard_query(
+            client,
+            question,
+            language=language,
+            history=history,
+            k=k,
+            similarity_threshold=similarity_threshold,
+        )
+    return run_agentic_query(
+        client,
+        question,
+        language=language,
+        history=history,
+        k=k,
+        similarity_threshold=similarity_threshold,
+        max_iterations=max_iterations,
+    )
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Query the AI Knowledge Base.")
+    parser.add_argument("question", nargs="?", help="Question to ask the knowledge base")
+    parser.add_argument(
+        "--mode",
+        choices=["standard", "agentic"],
+        default=DEFAULT_MODE if DEFAULT_MODE in {"standard", "agentic"} else "agentic",
+        help="Retrieval mode to use",
+    )
+    parser.add_argument(
+        "--language",
+        choices=["en", "zh"],
+        default=DEFAULT_LANGUAGE if DEFAULT_LANGUAGE in {"en", "zh"} else "en",
+        help="Output language for the final answer",
+    )
+    parser.add_argument("--k", type=int, default=DEFAULT_TOP_K, help="Top-k results for retrieval")
+    parser.add_argument(
+        "--similarity-threshold",
+        type=float,
+        default=DEFAULT_SIMILARITY_THRESHOLD,
+        help="Minimum cosine similarity score to keep a retrieved chunk",
+    )
+    parser.add_argument(
+        "--max-iterations",
+        type=int,
+        default=DEFAULT_MAX_ITERATIONS,
+        help="Maximum retrieval rounds in agentic mode",
+    )
+    parser.add_argument(
+        "--show-trace",
+        action="store_true",
+        help="Print planner, retrieval, and reflection trace after the answer",
+    )
+    return parser.parse_args()
+
+
+def _print_trace(result: dict[str, Any]) -> None:
+    if result.get("mode") != "agentic":
+        return
+
+    print("\n=== Agentic Trace ===")
+    print(f"Sub-queries: {result.get('sub_queries', [])}")
+    print(f"Executed queries: {result.get('executed_queries', [])}")
+    print(f"Iterations: {result.get('iterations', 0)}")
+
+    retrieval_history = result.get("retrieval_history", [])
+    if retrieval_history:
+        print("Retrieval history:")
+        for entry in retrieval_history:
+            print(
+                f"- iteration {entry['iteration']}: {entry['query']} "
+                f"(new_hits={entry['new_hits']}, paths={entry['paths']})"
+            )
+
+    reflection_notes = result.get("reflection_notes", [])
+    if reflection_notes:
+        print("Reflection notes:")
+        for note in reflection_notes:
+            print(f"- {note}")
 
 
 def main():
-    if len(sys.argv) < 2:
-        print("Usage: python scripts/ask.py \"your question\"")
+    args = parse_args()
+    if not args.question:
+        print('Usage: python scripts/ask.py "your question"')
         sys.exit(1)
 
-    question = sys.argv[1]
     client = OpenAI()
-    
-    try:
-        hits = retrieve(client, question)
-        
-        # Check if we got any results
-        if not hits:
-            print("I don't have enough information to answer this question.")
-            print("The knowledge base doesn't contain relevant documents for this query.")
-            sys.exit(0)
 
-        context = "\n\n".join(f"[{i+1}] {hit['path']}\n{hit['text']}" for i, hit in enumerate(hits))
-        messages = [
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": format_user_prompt(question, context)},
-        ]
-        
-        answer = _create_chat_completion(client, messages)
-        print(answer)
-        
-    except FileNotFoundError as e:
-        print(f"Error: {e}")
+    try:
+        result = run_query(
+            client,
+            args.question,
+            mode=args.mode,
+            language=args.language,
+            k=args.k,
+            similarity_threshold=args.similarity_threshold,
+            max_iterations=args.max_iterations,
+        )
+        print(result["answer"])
+        if args.show_trace:
+            _print_trace(result)
+    except FileNotFoundError as error:
+        print(f"Error: {error}")
         print("Please run 'make index' or 'python scripts/build_index.py' first.")
         sys.exit(1)
-    except Exception as e:
-        print(f"Error: {e}")
+    except Exception as error:  # noqa: BLE001 - surface the failure for CLI callers
+        print(f"Error: {error}")
         sys.exit(1)
 
 

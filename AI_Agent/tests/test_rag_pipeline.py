@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 from types import SimpleNamespace
 
+import numpy as np
 import pytest
 
 AI_AGENT_DIR = Path(__file__).resolve().parents[1]
@@ -17,6 +18,8 @@ if str(AI_AGENT_DIR) not in sys.path:
 
 from scripts import ask as ask_module
 from scripts import build_index as build_index_module
+from scripts import query_enhancements as enhancements_module
+from scripts.agentic_rag import AgenticRagEngine
 from scripts.utils import validate_file_content
 
 
@@ -402,3 +405,291 @@ class TestNoMatchResponse:
         # The system should handle this gracefully
         # If no hits, the main() function should print "I don't have enough information"
         assert isinstance(hits, list)  # Should return a list, even if empty
+
+
+class TestAgenticQuery:
+    """Test the iterative Agentic RAG workflow."""
+
+    def test_run_agentic_query_decomposes_and_synthesizes(self, monkeypatch):
+        responses = iter(
+            [
+                '{"sub_queries": ["governance principles", "risk management expectations"]}',
+                '{"decision": "synthesize", "reason": "Enough evidence collected.", "additional_queries": []}',
+                "Summary with [1] Knowledge_Base_MarkDown/governance.md and [2] Knowledge_Base_MarkDown/risk.md",
+            ]
+        )
+        requested_queries = []
+
+        def fake_chat_completion(client, messages, temperature=0.2):
+            return next(responses)
+
+        def fake_retrieve(client, question, k=8, similarity_threshold=0.0):
+            requested_queries.append(question)
+            lookup = {
+                "governance principles": [
+                    {
+                        "path": "Knowledge_Base_MarkDown/governance.md",
+                        "text": "Governance guidance focuses on oversight and accountability.",
+                    }
+                ],
+                "risk management expectations": [
+                    {
+                        "path": "Knowledge_Base_MarkDown/risk.md",
+                        "text": "Risk management guidance emphasizes controls and monitoring.",
+                    }
+                ],
+            }
+            return lookup.get(question, [])
+
+        monkeypatch.setattr(ask_module, "_create_chat_completion", fake_chat_completion)
+        monkeypatch.setattr(ask_module, "retrieve", fake_retrieve)
+
+        result = ask_module.run_agentic_query(
+            client=object(),
+            question="Compare the governance and risk themes in the knowledge base.",
+            language="en",
+            k=2,
+            max_iterations=2,
+        )
+
+        assert result["mode"] == "agentic"
+        assert result["sub_queries"] == ["governance principles", "risk management expectations"]
+        assert requested_queries == ["governance principles", "risk management expectations"]
+        assert len(result["hits"]) == 2
+        assert result["iterations"] == 1
+        assert "Enough evidence collected." in result["reflection_notes"]
+        assert "Summary with [1]" in result["answer"]
+
+    def test_run_agentic_query_can_request_second_iteration(self, monkeypatch):
+        responses = iter(
+            [
+                '{"sub_queries": ["governance framework"]}',
+                '{"decision": "continue", "reason": "Need a dedicated risk query.", "additional_queries": ["risk controls"]}',
+                "Final answer with [1] Knowledge_Base_MarkDown/governance.md and [2] Knowledge_Base_MarkDown/risk.md",
+            ]
+        )
+        requested_queries = []
+
+        def fake_chat_completion(client, messages, temperature=0.2):
+            return next(responses)
+
+        def fake_retrieve(client, question, k=8, similarity_threshold=0.0):
+            requested_queries.append(question)
+            lookup = {
+                "governance framework": [
+                    {
+                        "path": "Knowledge_Base_MarkDown/governance.md",
+                        "text": "Governance coverage focuses on strategy and oversight.",
+                    }
+                ],
+                "risk controls": [
+                    {
+                        "path": "Knowledge_Base_MarkDown/risk.md",
+                        "text": "Risk controls cover mitigation, monitoring, and escalation.",
+                    }
+                ],
+            }
+            return lookup.get(question, [])
+
+        monkeypatch.setattr(ask_module, "_create_chat_completion", fake_chat_completion)
+        monkeypatch.setattr(ask_module, "retrieve", fake_retrieve)
+
+        result = ask_module.run_agentic_query(
+            client=object(),
+            question="Summarize governance and risk control guidance.",
+            language="en",
+            k=2,
+            max_iterations=2,
+        )
+
+        assert requested_queries == ["governance framework", "risk controls"]
+        assert result["iterations"] == 2
+        assert result["executed_queries"] == ["governance framework", "risk controls"]
+        assert "Need a dedicated risk query." in result["reflection_notes"]
+        assert any("iteration limit" in note.lower() for note in result["reflection_notes"])
+
+    def test_run_agentic_query_falls_back_to_original_question(self, monkeypatch):
+        question = "What are the governance priorities?"
+        responses = iter(
+            [
+                "not-json",
+                "Fallback answer with [1] Knowledge_Base_MarkDown/governance.md",
+            ]
+        )
+        requested_queries = []
+
+        def fake_chat_completion(client, messages, temperature=0.2):
+            return next(responses)
+
+        def fake_retrieve(client, current_question, k=8, similarity_threshold=0.0):
+            requested_queries.append(current_question)
+            return [
+                {
+                    "path": "Knowledge_Base_MarkDown/governance.md",
+                    "text": "Governance priorities include accountability and policy alignment.",
+                }
+            ]
+
+        monkeypatch.setattr(ask_module, "_create_chat_completion", fake_chat_completion)
+        monkeypatch.setattr(ask_module, "retrieve", fake_retrieve)
+
+        result = ask_module.run_agentic_query(
+            client=object(),
+            question=question,
+            language="en",
+            k=2,
+            max_iterations=1,
+        )
+
+        assert result["sub_queries"] == [question]
+        assert requested_queries == [question]
+        assert "Fallback answer" in result["answer"]
+
+    def test_agentic_query_applies_global_cap_before_synthesis(self):
+        captured = {}
+
+        def fake_synthesize(question, hits, language, history):
+            captured["hits"] = hits
+            return "done"
+
+        engine = AgenticRagEngine(
+            chat_fn=lambda messages, temperature: '{"sub_queries": ["governance risk", "actuarial insurance"]}',
+            retrieve_fn=lambda query, k, threshold: [
+                {
+                    "path": f"Knowledge_Base_MarkDown/{query.replace(' ', '_')}_a.md",
+                    "text": f"{query} governance risk actuarial insurance transparency controls",
+                    "retrieval_score": 0.9,
+                },
+                {
+                    "path": f"Knowledge_Base_MarkDown/{query.replace(' ', '_')}_b.md",
+                    "text": f"{query} general productivity notes",
+                    "retrieval_score": 0.7,
+                },
+            ],
+            synthesize_fn=fake_synthesize,
+            max_iterations=1,
+            top_k=2,
+            synthesis_top_k=2,
+        )
+
+        result = engine.run("What governance and risk controls should actuaries use for insurance AI models?")
+
+        assert len(captured["hits"]) == 2
+        assert len(result.hits) == 2
+        assert all("retrieval_score" in hit for hit in result.hits)
+
+
+class TestRetrievalEnhancements:
+    """Test reranking and domain-aware query guidance."""
+
+    def test_build_domain_context_detects_actuarial_governance_query(self):
+        context = enhancements_module.build_domain_context(
+            "What governance and risk controls should actuaries use for insurance AI models?"
+        )
+
+        assert "governance" in context.planner_hint.lower()
+        assert "risk" in context.reflector_hint.lower()
+        assert "actuarial" in context.priority_terms
+        assert "insurance" in context.priority_terms
+
+    def test_rerank_hits_promotes_domain_relevant_chunk(self):
+        hits = [
+            {
+                "path": "Knowledge_Base_MarkDown/copilot_notes.md",
+                "text": "General AI productivity tips for meeting notes and drafting.",
+                "retrieval_score": 0.95,
+            },
+            {
+                "path": "Knowledge_Base_MarkDown/governance_controls.md",
+                "text": "AI governance, risk controls, transparency, and actuarial oversight in insurance.",
+                "retrieval_score": 0.80,
+            },
+        ]
+
+        reranked = enhancements_module.rerank_hits(
+            "What governance and risk controls should actuaries use for insurance AI models?",
+            hits,
+            top_k=1,
+        )
+
+        assert reranked[0]["path"].endswith("governance_controls.md")
+        assert reranked[0]["rerank_score"] >= reranked[0]["retrieval_score"]
+
+    def test_retrieve_uses_reranking_before_trimming(self, monkeypatch):
+        class FakeIndex:
+            def search(self, query_array, k):
+                return (
+                    np.array([[0.95, 0.80]], dtype="float32"),
+                    np.array([[0, 1]], dtype="int64"),
+                )
+
+        docs = [
+            {
+                "path": "Knowledge_Base_MarkDown/copilot_notes.md",
+                "text": "General AI productivity tips for meeting notes and drafting.",
+            },
+            {
+                "path": "Knowledge_Base_MarkDown/governance_controls.md",
+                "text": "AI governance, risk controls, transparency, and actuarial oversight in insurance.",
+            },
+        ]
+
+        monkeypatch.setattr(ask_module, "_load_artifacts", lambda: (FakeIndex(), docs))
+        monkeypatch.setattr(ask_module, "_create_embedding", lambda client, text: _vectorize(text))
+
+        hits = ask_module.retrieve(
+            client=object(),
+            question="What governance and risk controls should actuaries use for insurance AI models?",
+            k=1,
+        )
+
+        assert len(hits) == 1
+        assert hits[0]["path"].endswith("governance_controls.md")
+
+    def test_agentic_planner_prompt_includes_domain_guidance(self):
+        captured_messages = []
+
+        def fake_chat(messages, temperature):
+            captured_messages.append(messages)
+            return '{"sub_queries": ["AI governance controls", "actuarial oversight"]}'
+
+        engine = AgenticRagEngine(
+            chat_fn=fake_chat,
+            retrieve_fn=lambda question, k, threshold: [],
+            synthesize_fn=lambda question, hits, language, history: "done",
+            max_iterations=1,
+        )
+
+        result = engine.run("What governance and risk controls should actuaries use for insurance AI models?")
+
+        planner_prompt = captured_messages[0][1]["content"].lower()
+        assert "governance" in planner_prompt
+        assert "actuarial" in planner_prompt
+        assert result.sub_queries == ["AI governance controls", "actuarial oversight"]
+
+    def test_run_query_preserves_requested_k_in_agentic_mode(self, monkeypatch):
+        captured = {}
+
+        def fake_run_agentic_query(client, question, **kwargs):
+            captured.update(kwargs)
+            return {
+                "mode": "agentic",
+                "answer": "ok",
+                "hits": [],
+                "sub_queries": [],
+                "executed_queries": [],
+                "iterations": 0,
+                "reflection_notes": [],
+                "retrieval_history": [],
+            }
+
+        monkeypatch.setattr(ask_module, "run_agentic_query", fake_run_agentic_query)
+
+        ask_module.run_query(
+            client=object(),
+            question="Test question",
+            mode="agentic",
+            k=7,
+        )
+
+        assert captured["k"] == 7
