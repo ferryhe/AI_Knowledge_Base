@@ -12,6 +12,7 @@ from scripts.ask import (
     get_document_snippets,
     run_query,
 )
+from scripts.rich_markdown import render_rich_markdown
 
 REPO_URL = "https://github.com/ferryhe/AI_Knowledge_Base"
 DOCS_DIR = Path(__file__).resolve().parent.parent / "Knowledge_Base_MarkDown"
@@ -214,7 +215,7 @@ with st.sidebar:
         github_blob = f"{REPO_URL}/blob/main/Knowledge_Base_MarkDown/{selected_label.replace(os.sep, '/')}"
         st.markdown(f"[{get_text('open_github')}]({github_blob})")
         with st.expander(get_text("preview"), expanded=False):
-            st.code(read_preview_text(selected_file), language="markdown")
+            render_rich_markdown(read_preview_text(selected_file), height=460)
         if st.button(get_text("summarize_file"), use_container_width=True, key="summarize_button"):
             if not has_api_key or not artifacts_ready:
                 st.error(get_text("setup_error"))
@@ -303,9 +304,10 @@ if not st.session_state.history:
 else:
     for entry in st.session_state.history:
         st.markdown(f"**{get_text('you')}:** {entry['question']}")
-        st.markdown(f"**{get_text('ai')}:** {entry['answer']}")
+        st.markdown(f"**{get_text('ai')}:**")
+        render_rich_markdown(entry["answer"], height=460)
         with st.expander(get_text("retrieved_snippets")):
             for i, hit in enumerate(entry["hits"], start=1):
                 repo_link = f"{REPO_URL}/blob/main/{hit['path'].replace(os.sep, '/')}"
                 st.markdown(f"**[{i}]** [{hit['path']} ↗]({repo_link})")
-                st.code(hit["text"], language="markdown")
+                render_rich_markdown(hit["text"], height=340)

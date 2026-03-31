@@ -4,3 +4,4 @@ numpy
 tiktoken
 python-dotenv
 pytest
+streamlit
